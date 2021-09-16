@@ -4,13 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef struct
 {
     int *file_mouse;
     int *file_keyboard;
 } devices_info;
 
-devices_info* get_devices();
+/** 
+ * 
+ * @return pointer to struct devices_info
+ * 
+ **/
+devices_info *get_devices();
 
 #endif
