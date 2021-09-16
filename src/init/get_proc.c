@@ -33,11 +33,10 @@ devices_info *get_devices()
 
 int name_analyse(char *line)
 {
-    if (strstr(line, "ASUE") != NULL)
-        if (strstr(line, "Touchpad") != NULL)
-            get_touchpad_info(line);
-        else if (strstr(line, "Keyboard"))
-            get_keyboard_info(line);
+    if (strstr(line, "Touchpad") != NULL || strstr(line, "ELAN") != NULL)
+        get_touchpad_info(line);
+    else if (strstr(line, "AT Translated Set 2 keyboard") != NULL || strstr(line, "Asus Keyboard") != NULL)
+        get_keyboard_info(line);
 
     return 0;
 }
@@ -54,6 +53,7 @@ void get_touchpad_info(char *line)
             if ((line_pointer = strstr(line, i2c)) != NULL)
             {
                 get_number(line_pointer + sizeof(i2c) - 1, number);
+                printf("i2c file = %s\n", number);
                 info->i2c = atoi(number);
             }
             else
@@ -65,6 +65,7 @@ void get_touchpad_info(char *line)
             if ((line_pointer = strstr(line, event)) != NULL)
             {
                 get_number(line_pointer + sizeof(event) - 1, number);
+                printf("Touchpad event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_touchpad = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
                     stop_get_proc("src/init/get_proc.c -> get_touchpad_info : open problems\n");
@@ -88,6 +89,7 @@ void get_keyboard_info(char *line)
             if ((line_pointer = strstr(line, event)) != NULL)
             {
                 get_number(line_pointer + sizeof(event) - 1, number);
+                printf("Keyboard event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_keyboard = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
                     stop_get_proc("src/init/get_proc.c -> get_keyboard_info : open problems\n");
