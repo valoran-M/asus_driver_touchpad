@@ -6,8 +6,8 @@
 
 typedef struct
 {
-    int *file_mouse;
-    int *file_keyboard;
+    int file_touchpad;
+    int file_keyboard;
     int i2c;
 } devices_info;
 
@@ -17,5 +17,15 @@ typedef struct
  * 
  **/
 devices_info *get_devices();
+
+
+/**
+ * 
+ * frees the heap
+ * 
+ * @param devices_info*
+ * 
+ **/
+void stop(devices_info *info);
 
 #endif

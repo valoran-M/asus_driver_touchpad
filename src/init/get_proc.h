@@ -5,8 +5,12 @@
 
 #include "init.h"
 
+#define EVENT_FILE "/dev/input/event"
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
 #define MAX_LINE 500
+
+static FILE *devices;
+static devices_info *info;
 
 static int touchapd = 0, keyboard = 0;
 
@@ -23,21 +27,37 @@ int name_analyse(char *);
 /**
  * get information for touchpad event
  * 
- * @param FILE* file where information devices are stocked
- * @param devices_info* struct for différent information
  * @param char* string for file's lines
  * 
  **/
-void get_touchpad_info(FILE *devices, devices_info *info, char *line);
+void get_touchpad_info(char *line);
 
 /**
  * get information for keyboard event
  * 
- * @param FILE* file where information devices are stocked
- * @param devices_info* struct for différent information
  * @param char* string for file's lines
  * 
  **/
-void get_keyboard_info(FILE *devices, devices_info *info, char *line);
+void get_keyboard_info(char *line);
+
+/**
+ * 
+ * get first number in string
+ * 
+ * @param char* line
+ * @param char* number in string 
+ * 
+ **/
+void get_number(char *line, char *number);
+
+
+/**
+ * 
+ * stop get_proc when FAILURE
+ * 
+ * @param char* output
+ * 
+ **/
+void stop_get_proc(char *output);
 
 #endif
