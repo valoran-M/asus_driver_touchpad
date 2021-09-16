@@ -4,6 +4,7 @@ project(asus_driver_touchpad VERSION 0.0.1)
 
 set(SRCS
     src/init/init.c
+    src/init/get_proc.c
 )
 
 set(HEADERS
