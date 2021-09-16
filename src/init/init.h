@@ -4,11 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct abs_info
+{
+    int max;
+    int min;
+};
+
 typedef struct
 {
     int file_touchpad;
     int file_keyboard;
     int i2c;
+    struct abs_info x;
+    struct abs_info y;
 } devices_info;
 
 /** 
@@ -17,7 +25,6 @@ typedef struct
  * 
  **/
 devices_info *get_devices();
-
 
 /**
  * 

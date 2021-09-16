@@ -30,7 +30,7 @@ int name_analyse(char *line)
         if (strstr(line, "Touchpad") != NULL)
             get_touchpad_info(line);
         else if (strstr(line, "Keyboard"))
-            get_touchpad_info(line);
+            get_keyboard_info(line);
 
     return 0;
 }
@@ -59,7 +59,7 @@ void get_touchpad_info(char *line)
             {
                 get_number(line_pointer + sizeof(event) - 1, number);
                 char event_file[50] = EVENT_FILE;
-                if((info->file_touchpad = open(strcat(event_file, number), O_RDONLY | O_CREAT) == -1))
+                if ((info->file_touchpad = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
                     stop_get_proc("src/init/get_proc.c -> get_touchpad_info : open problems\n");
                 break;
             }
@@ -70,7 +70,25 @@ void get_touchpad_info(char *line)
 
 void get_keyboard_info(char *line)
 {
+    char *line_pointer;
+    char number[5];
     keyboard = 1;
+
+    while (fgets(line, MAX_LINE, devices) != NULL)
+        if (strstr(line, "Handlers=") != NULL)
+        {
+            char event[] = "event";
+            if ((line_pointer = strstr(line, event)) != NULL)
+            {
+                get_number(line_pointer + sizeof(event) - 1, number);
+                char event_file[50] = EVENT_FILE;
+                if ((info->file_keyboard = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
+                    stop_get_proc("src/init/get_proc.c -> get_keyboard_info : open problems\n");
+                break;
+            }
+            else
+                stop_get_proc("src/init/get_proc.c -> get_keyboard_info :  event coef is not found\n");
+        }
 }
 
 void get_number(char *line, char *number)
