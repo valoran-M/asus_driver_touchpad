@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "init.h"
 #include "get_proc.h"
@@ -37,10 +38,28 @@ int name_analyse(char *line)
 
 void get_touchpad_info(FILE *devices, devices_info *info, char *line)
 {
+    char string_int[10];
+    char *line_pointer;
     touchapd = 1;
     while (fgets(line, MAX_LINE, devices) != NULL)
         if (strstr(line, "Sysfs=") != NULL)
-            printf("%s", line);
+        {
+            if ((line_pointer = strstr(line, "i2c-")) != NULL)
+            {
+                line_pointer += 4;
+                int i;
+                for (i = 0; isdigit(*(line_pointer + i)); i++)
+                    string_int[i] = *(line_pointer + i);
+                string_int[i] = '\0';
+                info->i2c = atoi(string_int);
+                return;
+            }
+            else
+            {
+                printf("LLLL");
+                return;
+            }
+        }
 }
 
 void get_keyboard_info(FILE *devices, devices_info *info, char *line)

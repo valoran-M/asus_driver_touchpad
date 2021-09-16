@@ -8,6 +8,7 @@ typedef struct
 {
     int *file_mouse;
     int *file_keyboard;
+    int i2c;
 } devices_info;
 
 /** 
