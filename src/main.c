@@ -1,7 +1,10 @@
-#include <stdio.h>
+#include "src/init/init.h"
+
 
 int main(int argc, char const *argv[])
 {
-    printf("OK\n");
+    devices_info *info = get_devices();
+    
+
     return 0;
 }
