@@ -19,6 +19,13 @@ devices_info *get_devices()
         if (strstr(line, "Name=") != NULL)
             name_analyse(line);
 
+    if (keyboard == 0)
+        stop_get_proc("src/init/get_proc.c -> get_devices :  The device \"Asus Keyboard\" was not found\n");
+    else if (touchapd == 0)
+        stop_get_proc("src/init/get_proc.c -> get_devices :  The device \"Asus Touchpad\" was not found\n");
+    else
+        printf("All devices have been found\n");
+
     fclose(devices);
 
     return info;
