@@ -27,6 +27,14 @@ typedef struct
 devices_info *get_devices();
 
 /**
+ * add max and min in devices_info
+ * 
+ * @param devices_info* info
+ * 
+ **/
+void max_min(devices_info *info);
+
+/**
  * 
  * frees the heap
  * 

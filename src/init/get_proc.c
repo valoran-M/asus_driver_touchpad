@@ -20,11 +20,11 @@ devices_info *get_devices()
             name_analyse(line);
 
     if (keyboard == 0)
-        stop_get_proc("src/init/get_proc.c -> get_devices :  The device \"Asus Keyboard\" was not found\n");
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  The device \"Asus Keyboard\" was not found\n");
     else if (touchapd == 0)
-        stop_get_proc("src/init/get_proc.c -> get_devices :  The device \"Asus Touchpad\" was not found\n");
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  The device \"Asus Touchpad\" was not found\n");
     else
-        printf("All devices have been found\n");
+        printf("\nAll devices have been found\n");
 
     fclose(devices);
 
@@ -57,7 +57,7 @@ void get_touchpad_info(char *line)
                 info->i2c = atoi(number);
             }
             else
-                stop_get_proc("src/init/get_proc.c -> get_touchpad_info :  i2c coef is not found\n");
+                stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info :  i2c coef is not found\n");
         }
         else if (strstr(line, "Handlers=") != NULL)
         {
@@ -68,11 +68,11 @@ void get_touchpad_info(char *line)
                 printf("Touchpad event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_touchpad = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
-                    stop_get_proc("src/init/get_proc.c -> get_touchpad_info : open problems\n");
+                    stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problems\n");
                 break;
             }
             else
-                stop_get_proc("src/init/get_proc.c -> get_touchpad_info :  event coef is not found\n");
+                stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info :  event coef is not found\n");
         }
 }
 
@@ -92,18 +92,18 @@ void get_keyboard_info(char *line)
                 printf("Keyboard event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_keyboard = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
-                    stop_get_proc("src/init/get_proc.c -> get_keyboard_info : open problems\n");
+                    stop_get_proc("\nsrc/init/get_proc.c -> get_keyboard_info : open problems\n");
                 break;
             }
             else
-                stop_get_proc("src/init/get_proc.c -> get_keyboard_info :  event coef is not found\n");
+                stop_get_proc("\nsrc/init/get_proc.c -> get_keyboard_info :  event coef is not found\n");
         }
 }
 
 void get_number(char *line, char *number)
 {
     if (line == NULL)
-        stop_get_proc("src/init/get_proc.c -> get_number : line = NULL\n");
+        stop_get_proc("\nsrc/init/get_proc.c -> get_number : line = NULL\n");
 
     int i;
     for (i = 0; isdigit(*(line + i)); i++)
