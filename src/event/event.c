@@ -1,4 +1,10 @@
-#include "src/init/init.h"
+#include <signal.h>
+#include <stdio.h>
 
-#include <linux/input.h>
-#include <fcntl.h>
+#include "event.h"
+
+void sighandler(int sig)
+{
+    if (sig == SIGINT)
+        loop = 0;
+}
