@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "cstdio": "cpp"
-    },
-    "nixEnvSelector.nixShellConfig": "${workspaceRoot}/shell.nix"
-}
