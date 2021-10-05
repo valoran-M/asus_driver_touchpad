@@ -1,4 +1,4 @@
-#include "init/init.h"
+#include "utility/utility.h"
 #include "event/run.h"
 
 int main(int argc, char const *argv[])

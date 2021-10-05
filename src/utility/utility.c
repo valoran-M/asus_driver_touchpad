@@ -1,9 +1,8 @@
 #include <unistd.h>
 
-#include <sys/ioctl.h>
 #include <linux/input.h>
 
-#include "init.h"
+#include "utility.h"
 
 void max_min(devices_info *info)
 {

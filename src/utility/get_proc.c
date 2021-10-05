@@ -5,7 +5,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include "init.h"
+#include "utility.h"
 #include "get_proc.h"
 
 devices_info *get_devices()

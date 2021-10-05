@@ -6,16 +6,16 @@ set(SRCS
     src/event/run.c
     src/event/event.c
 
-    src/init/get_proc.c
-    src/init/init.c
+    src/utility/get_proc.c
+    src/utility/utility.c
 )
 
 set(HEADERS
     src/event/event.h
     src/event/event.h
 
-    src/init/get_proc.h
-    src/init/init.h
+    src/utility/get_proc.h
+    src/utility/utility.h
 )
 
 add_executable(asus_driver_touchpad src/main.c ${SRCS} ${HEADERS})

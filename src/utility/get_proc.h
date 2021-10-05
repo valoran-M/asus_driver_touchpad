@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "init.h"
+#include "utility.h"
 
 #define EVENT_FILE "/dev/input/event"
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
