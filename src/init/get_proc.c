@@ -67,7 +67,7 @@ void get_touchpad_info(char *line)
                 get_number(line_pointer + sizeof(event) - 1, number);
                 printf("Touchpad event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
-                if ((info->file_touchpad = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
+                if ((info->file_touchpad = open(strcat(event_file, number), O_RDWR)) == -1)
                     stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problems\n");
                 break;
             }
@@ -91,7 +91,7 @@ void get_keyboard_info(char *line)
                 get_number(line_pointer + sizeof(event) - 1, number);
                 printf("Keyboard event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
-                if ((info->file_keyboard = open(strcat(event_file, number), O_RDONLY | O_CREAT)) == -1)
+                if ((info->file_keyboard = open(strcat(event_file, number), O_RDWR)) == -1)
                     stop_get_proc("\nsrc/init/get_proc.c -> get_keyboard_info : open problems\n");
                 break;
             }
