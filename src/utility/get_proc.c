@@ -5,6 +5,8 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include <linux/uinput.h>
+
 #include "utility.h"
 #include "get_proc.h"
 
@@ -26,9 +28,30 @@ devices_info *get_devices()
     else
         printf("\nAll devices have been found\n");
 
+    setup_uinput();
+
     fclose(devices);
 
     return info;
+}
+
+void setup_uinput()
+{
+    struct uinput_setup usetup;
+
+    info->file_uinput = open(UINPUT_FILE, O_WRONLY | O_NONBLOCK);
+
+    ioctl(info->file_uinput, UI_SET_EVBIT, EV_KEY);
+    ioctl(info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK);
+
+    memset(&usetup, 0, sizeof(usetup));
+    usetup.id.bustype = BUS_USB;
+    usetup.id.vendor = 0x1234;
+    usetup.id.product = 0x5678;
+    strcpy(usetup.name, "Asus Touchpad/Numpad driver");
+
+    ioctl(info->file_uinput, UI_DEV_SETUP, &usetup);
+    ioctl(info->file_uinput, UI_DEV_CREATE);
 }
 
 int name_analyse(char *line)

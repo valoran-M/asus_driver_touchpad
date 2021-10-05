@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 #include <linux/input.h>
+#include <linux/uinput.h>
 
 #include "utility.h"
 
@@ -23,6 +24,10 @@ void stop(devices_info *info)
 {
     close(info->file_keyboard);
     close(info->file_touchpad);
+
+    ioctl(info->file_uinput, UI_DEV_DESTROY);
+
+    close(info->file_uinput);
 
     free(info);
 }

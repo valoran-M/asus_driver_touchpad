@@ -5,6 +5,7 @@
 
 #include "utility.h"
 
+#define UINPUT_FILE "/dev/uinput"
 #define EVENT_FILE "/dev/input/event"
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
 #define MAX_LINE 500
@@ -13,6 +14,13 @@ static FILE *devices;
 static devices_info *info;
 
 static int touchapd = 0, keyboard = 0;
+
+/**
+ * 
+ * setup uinput device
+ * 
+ **/
+void setup_uinput();
 
 /**
  * name analyser in devices file

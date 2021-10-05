@@ -11,4 +11,17 @@ int loop;
  **/
 void sighandler(int);
 
+
+/**
+ * emit a event
+ * 
+ * @param int file
+ * @param int event type
+ * @param int event code
+ * @param int event val
+ * 
+ **/
+void emit(int file, int type, int code, int val);
+
+
 #endif

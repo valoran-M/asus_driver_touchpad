@@ -14,6 +14,7 @@ typedef struct
 {
     int file_touchpad;
     int file_keyboard;
+    int file_uinput;
     int i2c;
     struct abs_info x;
     struct abs_info y;
