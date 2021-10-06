@@ -29,17 +29,17 @@ key **mod1_init()
             keys[line][col] = (key){0, code};
             code--;
         }
-    keys[0][3] = (key){0, KEY_ENTER};
-    keys[0][4] = (key){0, KEY_ENTER};
-    keys[1][3] = (key){0, KEY_ENTER};
-    keys[1][4] = (key){0, KEY_ENTER};
-    keys[2][3] = (key){0, KEY_ENTER};
-    keys[2][4] = (key){0, KEY_ENTER};
+    keys[0][3] = (key){0, KEY_BACKSLASH};
+    keys[0][4] = (key){0, KEY_BACKSPACE};
+    keys[1][3] = (key){1, KEY_BACKSLASH};
+    keys[1][4] = (key){0, KEY_BACKSPACE};
+    keys[2][3] = (key){0, KEY_MINUS};
+    keys[2][4] = (key){0, KEY_APOSTROPHE};
     keys[3][0] = (key){0, KEY_0};
-    keys[3][1] = (key){0, KEY_ENTER};
+    keys[3][1] = (key){0, KEY_DOT};
     keys[3][2] = (key){0, KEY_ENTER};
-    keys[3][3] = (key){0, KEY_ENTER};
-    keys[3][4] = (key){0, KEY_ENTER};
+    keys[3][3] = (key){1, KEY_EQUAL};
+    keys[3][4] = (key){0, KEY_EQUAL};
 
     return keys;
 }

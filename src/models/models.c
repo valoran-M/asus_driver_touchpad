@@ -17,7 +17,7 @@ key **keys_init(int line, int colonne)
     return keys;
 }
 
-void init_models(devices_info *info, int argc, char const *args[])
+void init_models(int argc, char const *args[])
 {
     enum models code = ux581l;
     info->line = 4;

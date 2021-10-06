@@ -6,7 +6,7 @@
 #include "utility/utility.h"
 #include "utility/uinput_init.h"
 
-void setup_uinput(devices_info *info)
+void setup_uinput()
 {
     struct uinput_setup usetup;
 

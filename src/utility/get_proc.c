@@ -8,7 +8,7 @@
 #include "utility.h"
 #include "get_proc.h"
 
-devices_info *get_devices()
+void get_devices()
 {
     info = malloc(sizeof(devices_info));
 
@@ -27,8 +27,6 @@ devices_info *get_devices()
         printf("\nAll devices have been found\n");
 
     fclose(devices);
-
-    return info;
 }
 
 int name_analyse(char *line)

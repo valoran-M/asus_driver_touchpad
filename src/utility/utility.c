@@ -3,11 +3,12 @@
 #include <linux/input.h>
 #include <linux/uinput.h>
 
-#include "utility.h"
+#include "utility/utility.h"
 
-void max_min(devices_info *info)
+void max_min()
 {
     int abs[6] = {0};
+
     ioctl(info->file_touchpad, EVIOCGABS(ABS_X), abs);
     info->x.min = abs[1];
     info->x.max = abs[2];
@@ -20,7 +21,7 @@ void max_min(devices_info *info)
     printf("\ny : \n  min: %d\n  max: %d\n", info->y.min, info->y.max);
 }
 
-void stop(devices_info *info)
+void stop()
 {
     close(info->file_keyboard);
     close(info->file_touchpad);
@@ -34,4 +35,6 @@ void stop(devices_info *info)
     free(info->keys);
 
     free(info);
+
+    exit(EXIT_SUCCESS);
 }

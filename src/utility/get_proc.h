@@ -10,7 +10,6 @@
 #define MAX_LINE 500
 
 static FILE *devices;
-static devices_info *info;
 
 static int touchapd = 0, keyboard = 0;
 

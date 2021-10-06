@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 #include "event.h"
+#include "utility/utility.h"
 
 void sighandler(int sig)
 {
-    if (sig == SIGINT)
-        loop = 0;
+    stop();
 }
 
 #include <unistd.h>

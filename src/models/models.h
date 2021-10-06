@@ -10,6 +10,6 @@
  * @param int** args
  * 
  **/
-void init_models(devices_info *info, int argc, char const *args[]);
+void init_models(int argc, char const *args[]);
 
 #endif

@@ -7,14 +7,13 @@
 
 int main(int argc, char const *argv[])
 {
-    devices_info *info = get_devices();
+    get_devices();
     max_min(info);
-    init_models(info, argc, argv);
+    init_models(argc, argv);
+    setup_uinput();
 
-    setup_uinput(info);
+    run();
 
-    run(info);
-
-    stop(info);
+    stop();
     return 0;
 }

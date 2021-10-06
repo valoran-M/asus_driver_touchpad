@@ -6,9 +6,7 @@
  * 
  * run driver
  * 
- * @param device_info* devices info get in init
- * 
  **/
-void run(devices_info *info);
+void run();
 
 #endif

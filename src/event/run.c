@@ -5,7 +5,7 @@
 #include "event.h"
 #include "utility/utility.h"
 
-void run(devices_info *info)
+void run()
 {
     loop = 1;
     struct input_event event;
@@ -19,7 +19,9 @@ void run(devices_info *info)
     
     signal(SIGINT, sighandler);
 
-    while (loop)
+    printf("OK\n");
+
+    while (1)
     {
         read(info->file_touchpad, &event, sizeof(event));
 
