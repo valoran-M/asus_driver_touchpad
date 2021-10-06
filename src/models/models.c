@@ -7,16 +7,6 @@
 #include "utility/utility.h"
 #include "models/models_type.h"
 
-key **keys_init(int line, int colonne)
-{
-    key **keys = calloc(line, sizeof(key *));
-    for (unsigned int i = 0; i < line; i++)
-    {
-        keys[i] = calloc(colonne, sizeof(key));
-    }
-    return keys;
-}
-
 void init_models(int argc, char const *args[])
 {
     enum models code = ux581l;

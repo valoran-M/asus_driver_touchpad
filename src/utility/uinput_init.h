@@ -5,6 +5,11 @@
 
 #define UINPUT_FILE "/dev/uinput"
 
+/**
+ * 
+ * setup uinput devices
+ * 
+ **/
 void setup_uinput();
 
 #endif

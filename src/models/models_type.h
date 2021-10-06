@@ -8,10 +8,33 @@ enum models
     ux581l
 };
 
+/**
+ * map keys with model
+ * 
+ * @param models model
+ * 
+ * @return key**
+ * 
+ **/
 key **key_init(enum models mod);
 
+/**
+ * init ux581l model
+ * 
+ * @return key**
+ * 
+ **/
 key **mod1_init();
 
+/**
+ * init key[][] array
+ * 
+ * @param int line
+ * @param int colonne
+ * 
+ * @return key**
+ * 
+ **/
 key **tab_init(int line, int colonne);
 
 #endif
