@@ -27,9 +27,20 @@ key **mod1_init()
         for (int col = 2; col >= 0; col--)
         {
             keys[line][col] = (key){0, code};
-            printf("%d, %d -> %d\n", line, col, code);
             code--;
         }
+    keys[0][3] = (key){0, KEY_ENTER};
+    keys[0][4] = (key){0, KEY_ENTER};
+    keys[1][3] = (key){0, KEY_ENTER};
+    keys[1][4] = (key){0, KEY_ENTER};
+    keys[2][3] = (key){0, KEY_ENTER};
+    keys[2][4] = (key){0, KEY_ENTER};
+    keys[3][0] = (key){0, KEY_0};
+    keys[3][1] = (key){0, KEY_ENTER};
+    keys[3][2] = (key){0, KEY_ENTER};
+    keys[3][3] = (key){0, KEY_ENTER};
+    keys[3][4] = (key){0, KEY_ENTER};
+
     return keys;
 }
 

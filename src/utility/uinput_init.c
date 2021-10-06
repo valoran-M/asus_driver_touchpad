@@ -15,9 +15,10 @@ void setup_uinput(devices_info *info)
     ioctl(info->file_uinput, UI_SET_EVBIT, EV_KEY);
     ioctl(info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK);
     ioctl(info->file_uinput, UI_SET_KEYBIT, KEY_LEFTSHIFT);
+
     for (size_t line = 0; line < info->line; line++)
         for (size_t col = 0; col < info->colonne; col++)
-            ioctl(info->file_uinput, UI_SET_KEYBIT, info->keys[line][col]);
+            ioctl(info->file_uinput, UI_SET_KEYBIT, info->keys[line][col].key);
 
     memset(&usetup, 0, sizeof(usetup));
     usetup.id.bustype = BUS_USB;
