@@ -21,7 +21,7 @@ void setup_uinput(devices_info *info)
             ioctl(info->file_uinput, UI_SET_KEYBIT, info->keys[line][col].key);
 
     memset(&usetup, 0, sizeof(usetup));
-    usetup.id.bustype = BUS_USB;
+    usetup.id.bustype = BUS_PCI;
     usetup.id.vendor = 0x1234;
     usetup.id.product = 0x5678;
     strcpy(usetup.name, "Asus Touchpad/Numpad driver");
