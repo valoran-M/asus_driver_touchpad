@@ -29,5 +29,9 @@ void stop(devices_info *info)
 
     close(info->file_uinput);
 
+    for (size_t i = 0; i < info->line; i++)
+        free(info->keys[i]);
+    free(info->keys);
+
     free(info);
 }

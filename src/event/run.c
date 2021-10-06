@@ -14,7 +14,9 @@ void run(devices_info *info)
         int x;
         int y;
     } position;
-
+    position.x = 0;
+    position.y = 0;
+    
     signal(SIGINT, sighandler);
 
     while (loop)

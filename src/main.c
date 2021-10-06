@@ -10,7 +10,6 @@ int main(int argc, char const *argv[])
     max_min(info);
     init_models(info, argc, argv);
 
-
     run(info);
 
     stop(info);

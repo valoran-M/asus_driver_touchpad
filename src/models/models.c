@@ -5,6 +5,7 @@
 
 #include "models.h"
 #include "utility/utility.h"
+#include "models/models_type.h"
 
 key **keys_init(int line, int colonne)
 {
@@ -18,17 +19,14 @@ key **keys_init(int line, int colonne)
 
 void init_models(devices_info *info, int argc, char const *args[])
 {
+    enum models code = ux581l;
+    info->line = 4;
+    info->colonne = 5;
     if (argc > 1)
     {
         info->line = 4;
         info->colonne = 5;
-        info->keys = keys_init(info->line, info->colonne);
-        info->keys[0][0] = (key){0, KEY_7};
+        code = ux581l;
     }
-    else
-    {
-        info->line = 4;
-        info->colonne = 5;
-        info->keys = keys_init(info->line, info->colonne);
-    }
+    info->keys = key_init(code);
 }
