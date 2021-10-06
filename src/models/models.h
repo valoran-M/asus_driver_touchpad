@@ -3,7 +3,6 @@
 
 #include "utility/utility.h"
 
-
 /**
  * initialise le modèle
  * 
@@ -11,6 +10,6 @@
  * @param int** args
  * 
  **/
-void init_models(devices_info *info, int argc, int *args[]);
+void init_models(devices_info *info, int argc, char const *args[]);
 
 #endif

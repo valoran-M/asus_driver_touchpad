@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include <linux/input-event-codes.h>
+
 #include "models.h"
 #include "utility/utility.h"
 
@@ -14,13 +16,14 @@ key **keys_init(int line, int colonne)
     return keys;
 }
 
-void init_models(devices_info *info, int argc, int *args[])
+void init_models(devices_info *info, int argc, char const *args[])
 {
     if (argc > 1)
     {
         info->line = 4;
         info->colonne = 5;
         info->keys = keys_init(info->line, info->colonne);
+        info->keys[0][0] = (key){0, KEY_7};
     }
     else
     {
