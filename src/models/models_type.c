@@ -3,20 +3,18 @@
 #include "utility/utility.h"
 #include "models/models_type.h"
 
-key **key_init(enum models mod)
+void key_init(enum models mod)
 {
-    key **keys;
     switch (mod)
     {
     case ux581l:
-        keys = mod1_init();
+        info->keys = mod1_init();
         break;
 
     default:
-        keys = mod1_init();
+        info->keys = mod1_init();
         break;
     }
-    return keys;
 }
 
 key **mod1_init()

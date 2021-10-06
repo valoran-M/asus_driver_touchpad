@@ -18,5 +18,5 @@ void init_models(int argc, char const *args[])
         info->colonne = 5;
         code = ux581l;
     }
-    info->keys = key_init(code);
+    key_init(code);
 }

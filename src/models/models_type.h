@@ -9,14 +9,12 @@ enum models
 };
 
 /**
- * map keys with model
+ * map keys with model in info
  * 
  * @param models model
  * 
- * @return key**
- * 
  **/
-key **key_init(enum models mod);
+void key_init(enum models mod);
 
 /**
  * init ux581l model
