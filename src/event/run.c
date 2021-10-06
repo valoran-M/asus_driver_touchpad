@@ -3,7 +3,7 @@
 #include <linux/input.h>
 
 #include "event.h"
-#include "../utility/utility.h"
+#include "utility/utility.h"
 
 void run(devices_info *info)
 {

@@ -6,6 +6,8 @@ set(SRCS
     src/event/run.c
     src/event/event.c
 
+    src/models/models.c
+
     src/utility/get_proc.c
     src/utility/utility.c
 )
@@ -13,6 +15,8 @@ set(SRCS
 set(HEADERS
     src/event/event.h
     src/event/event.h
+
+    src/models/models.h
 
     src/utility/get_proc.h
     src/utility/utility.h

@@ -12,12 +12,22 @@ struct abs_info
 
 typedef struct
 {
+    int shifted;
+    int key;
+} key;
+
+typedef struct
+{
     int file_touchpad;
     int file_keyboard;
     int file_uinput;
     int i2c;
     struct abs_info x;
     struct abs_info y;
+
+    key **keys;
+    int line;
+    int colonne;
 } devices_info;
 
 /** 

@@ -1,4 +1,5 @@
 #include "utility/utility.h"
+#include "models/models.h"
 #include "event/run.h"
 
 int main(int argc, char const *argv[])

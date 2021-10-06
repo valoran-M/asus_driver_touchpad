@@ -25,4 +25,6 @@ void emit(int file, int type, int code, int val)
     ie.time.tv_usec = 0;
 
     write(file, &ie, sizeof(ie));
+    if (type == EV_SYN && code == SYN_REPORT && val == 0)
+        emit(file, EV_SYN, SYN_REPORT, 0);
 }
