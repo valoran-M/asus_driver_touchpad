@@ -11,6 +11,7 @@ set(SRCS
 
     src/utility/get_proc.c
     src/utility/utility.c
+    src/utility/uinput_init.c
 )
 
 set(HEADERS
@@ -22,6 +23,7 @@ set(HEADERS
 
     src/utility/get_proc.h
     src/utility/utility.h
+    src/utility/uinput_init.h
 )
 
 add_executable(asus_driver_touchpad src/main.c ${SRCS} ${HEADERS})
