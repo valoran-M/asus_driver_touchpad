@@ -114,6 +114,6 @@ void stop_get_proc(char *output)
 {
     fprintf(stderr, output);
     fclose(devices);
-    stop(info);
+    free(info);
     exit(EXIT_FAILURE);
 }
