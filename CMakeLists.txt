@@ -4,6 +4,7 @@ project(asus_driver_touchpad VERSION 0.0.1)
 
 set(SRCS
     src/event/run.c
+    src/event/material.c
     src/event/event.c
 
     src/models/models.c
@@ -16,6 +17,7 @@ set(SRCS
 
 set(HEADERS
     src/event/event.h
+    src/event/material.h
     src/event/event.h
 
     src/models/models.h
@@ -29,3 +31,4 @@ set(HEADERS
 add_executable(asus_driver_touchpad src/main.c ${SRCS} ${HEADERS})
 target_compile_features(asus_driver_touchpad PRIVATE cxx_std_17)
 target_include_directories(asus_driver_touchpad PUBLIC src/)
+target_link_libraries(asus_driver_touchpad PUBLIC m)

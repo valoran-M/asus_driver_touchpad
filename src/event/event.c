@@ -1,5 +1,7 @@
 #include <signal.h>
-#include <stdio.h>
+#include <unistd.h>
+
+#include <linux/uinput.h>
 
 #include "event.h"
 #include "utility/utility.h"
@@ -9,11 +11,22 @@ void sighandler(int sig)
     stop();
 }
 
-#include <unistd.h>
+void remove_key(key k)
+{
+    emit(EV_KEY, KEY_LEFTSHIFT, 0);
+    emit(EV_KEY, k.key, 0);
+    emit(EV_SYN, SYN_REPORT, 0);
+}
 
-#include <linux/uinput.h>
+void emit_key(key k)
+{
+    if (k.shifted)
+        emit(EV_KEY, KEY_LEFTSHIFT, 1);
+    emit(EV_KEY, k.key, 1);
+    emit(EV_SYN, SYN_REPORT, 0);
+}
 
-void emit(int file, int type, int code, int val)
+void emit(int type, int code, int val)
 {
     struct input_event ie;
 
@@ -24,7 +37,5 @@ void emit(int file, int type, int code, int val)
     ie.time.tv_sec = 0;
     ie.time.tv_usec = 0;
 
-    write(file, &ie, sizeof(ie));
-    if (type == EV_SYN && code == SYN_REPORT && val == 0)
-        emit(file, EV_SYN, SYN_REPORT, 0);
+    write(info->file_uinput, &ie, sizeof(ie));
 }
