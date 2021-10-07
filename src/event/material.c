@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdlib.h>
-#include <linux/input-event-codes.h>
+
+#include <sys/ioctl.h>
+#include <linux/input.h>
 
 #include "event.h"
 #include "material.h"
@@ -10,6 +12,7 @@ void activate_numpad()
     emit(EV_KEY, KEY_NUMLOCK, 1);
     emit(EV_SYN, SYN_REPORT, 0);
     turn_on_touchpad();
+    ioctl(info->file_touchpad, EVIOCGRAB, 1);
 }
 
 void desactivate_numpad()
@@ -17,6 +20,7 @@ void desactivate_numpad()
     emit(EV_KEY, KEY_NUMLOCK, 0);
     emit(EV_SYN, SYN_REPORT, 0);
     turn_off_touchpad();
+    ioctl(info->file_touchpad, EVIOCGRAB, 0);
 }
 
 void change_brightness()
