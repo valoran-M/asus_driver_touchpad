@@ -16,9 +16,6 @@ void max_min()
     ioctl(info->file_touchpad, EVIOCGABS(ABS_Y), abs);
     info->y.min = abs[1];
     info->y.max = abs[2];
-
-    printf("\nx : \n  min: %d\n  max: %d\n", info->x.min, info->x.max);
-    printf("\ny : \n  min: %d\n  max: %d\n", info->y.min, info->y.max);
 }
 
 void stop()

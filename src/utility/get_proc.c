@@ -23,8 +23,6 @@ void get_devices()
         stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  The device \"Asus Keyboard\" was not found\n");
     else if (touchapd == 0)
         stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  The device \"Asus Touchpad\" was not found\n");
-    else
-        printf("\nAll devices have been found\n");
 
     fclose(devices);
 }
@@ -51,8 +49,9 @@ void get_touchpad_info(char *line)
             if ((line_pointer = strstr(line, i2c)) != NULL)
             {
                 get_number(line_pointer + sizeof(i2c) - 1, number);
-                printf("i2c file = %s\n", number);
-                info->i2c = atoi(number);
+                char event_file[50] = I2C_FILE;
+                if ((info->i2c = open(strcat(event_file, number), O_RDWR)) == -1)
+                    stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problems\n");
             }
             else
                 stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info :  i2c coef is not found\n");
@@ -63,7 +62,6 @@ void get_touchpad_info(char *line)
             if ((line_pointer = strstr(line, event)) != NULL)
             {
                 get_number(line_pointer + sizeof(event) - 1, number);
-                printf("Touchpad event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_touchpad = open(strcat(event_file, number), O_RDWR)) == -1)
                     stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problems\n");
@@ -87,7 +85,6 @@ void get_keyboard_info(char *line)
             if ((line_pointer = strstr(line, event)) != NULL)
             {
                 get_number(line_pointer + sizeof(event) - 1, number);
-                printf("Keyboard event = %s\n", number);
                 char event_file[50] = EVENT_FILE;
                 if ((info->file_keyboard = open(strcat(event_file, number), O_RDWR)) == -1)
                     stop_get_proc("\nsrc/init/get_proc.c -> get_keyboard_info : open problems\n");

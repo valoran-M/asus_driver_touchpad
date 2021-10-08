@@ -5,6 +5,7 @@
 
 #include "utility.h"
 
+#define I2C_FILE "/dev/i2c-"
 #define EVENT_FILE "/dev/input/event"
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
 #define MAX_LINE 500

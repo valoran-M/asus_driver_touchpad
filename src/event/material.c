@@ -1,9 +1,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <fcntl.h>
+
 #include <sys/ioctl.h>
 #include <linux/input.h>
 #include <linux/i2c-dev.h>
+
+#ifndef I2C_M_RD
+#include <linux/i2c.h>
+#endif
 
 #include "event.h"
 #include "material.h"
@@ -34,12 +40,21 @@ void change_brightness()
 
 void i2c_send()
 {
-    char command[100] = "i2ctransfer -f -y ";
-    char adr[3];
-    sprintf(adr, "%d", info->i2c);
-    strcat(command, adr);
-    strcat(command, " w13@0x15 0x05 0x00 0x3d 0x03 0x06 0x00 0x07 0x00 0x0d 0x14 0x03 ");
-    strcat(command, bright[brightness]);
-    strcat(command, " 0xad");
-    system(command);
+    buf[11] = bright[brightness];
+
+    struct i2c_msg message[] = {
+        {
+            .addr = (__u16)0x15,
+            .buf = buf,
+            .len = (__u16)13,
+        },
+    };
+
+    struct i2c_rdwr_ioctl_data payload =
+        {
+            .msgs = message,
+            .nmsgs = sizeof(message) / sizeof(message[0]),
+        };
+
+    ioctl(info->i2c, I2C_RDWR, &payload);
 }
