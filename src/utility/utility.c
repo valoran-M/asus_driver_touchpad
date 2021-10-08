@@ -22,6 +22,7 @@ void stop()
 {
     close(info->file_keyboard);
     close(info->file_touchpad);
+    close(info->i2c);
 
     ioctl(info->file_uinput, UI_DEV_DESTROY);
 

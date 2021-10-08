@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "utility/uinput_init.h"
 #include "utility/utility.h"
 #include "models/models.h"
@@ -8,7 +6,7 @@
 int main(int argc, char const *argv[])
 {
     get_devices();
-    max_min(info);
+    max_min();
     init_models(argc, argv);
     setup_uinput();
 
