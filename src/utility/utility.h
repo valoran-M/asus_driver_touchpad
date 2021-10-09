@@ -30,27 +30,20 @@ typedef struct
     int colonne;
 } devices_info;
 
-devices_info *info;
-
-/** 
- * 
- * setup devices_info
- * 
- **/
-void get_devices();
+//devices_info *info;
 
 /**
  * 
  * add max and min in devices_info
  * 
  **/
-void max_min();
+void max_min(devices_info *dev_info);
 
 /**
  * 
  * frees the heap
  * 
  **/
-void stop();
+void stop(devices_info *dev_info);
 
 #endif

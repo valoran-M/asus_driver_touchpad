@@ -5,34 +5,31 @@
 
 #include "utility/utility.h"
 
-void max_min()
-{
-    int abs[6] = {0};
 
-    ioctl(info->file_touchpad, EVIOCGABS(ABS_X), abs);
-    info->x.min = abs[1];
-    info->x.max = abs[2];
+void max_min(devices_info *dev_info) {
+    int abs[6] = {0}; // TO CHECK : 6 int isn't too wide ?
 
-    ioctl(info->file_touchpad, EVIOCGABS(ABS_Y), abs);
-    info->y.min = abs[1];
-    info->y.max = abs[2];
+    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs);
+    dev_info->x.min = abs[1];
+    dev_info->x.max = abs[2];
+
+    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs);
+    dev_info->y.min = abs[1];
+    dev_info->y.max = abs[2];
 }
 
-void stop()
-{
-    close(info->file_keyboard);
-    close(info->file_touchpad);
-    close(info->i2c);
+void stop(devices_info *dev_info) {
+    close(dev_info->file_keyboard);
+    close(dev_info->file_touchpad);
+    close(dev_info->i2c);
 
-    ioctl(info->file_uinput, UI_DEV_DESTROY);
+    ioctl(dev_info->file_uinput, UI_DEV_DESTROY);
 
-    close(info->file_uinput);
+    close(dev_info->file_uinput);
 
-    for (size_t i = 0; i < info->line; i++)
-        free(info->keys[i]);
-    free(info->keys);
-
-    free(info);
+    for (size_t i = 0; i < dev_info->line; i++)
+        free(dev_info->keys[i]);
+    free(dev_info->keys);
 
     exit(EXIT_SUCCESS);
 }

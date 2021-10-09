@@ -10,6 +10,6 @@
  * setup uinput devices
  * 
  **/
-void setup_uinput();
+void setup_uinput(devices_info *dev_info);
 
 #endif

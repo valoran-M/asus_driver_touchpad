@@ -1,14 +1,6 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-/**
- * signal handler
- * 
- * @param int type of signal
- * 
- **/
-void sighandler(int);
-
 #include "utility/utility.h"
 
 /**
@@ -17,7 +9,7 @@ void sighandler(int);
  * @param key
  * 
  **/
-void emit_key(key k);
+void emit_key(const devices_info *dev_info, key k);
 
 /**
  * remove key with key struct param
@@ -25,7 +17,7 @@ void emit_key(key k);
  * @param key
  * 
  **/
-void remove_key(key k);
+void remove_key(const devices_info *dev_info, key k);
 
 /**
  * emit a event
@@ -35,6 +27,6 @@ void remove_key(key k);
  * @param int event val
  * 
  **/
-void emit(int type, int code, int val);
+void emit(const devices_info *dev_info, int type, int code, int val);
 
 #endif
