@@ -10,7 +10,6 @@
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
 #define MAX_LINE 500
 
-
 /**
  *
  * setup devices_info
@@ -33,14 +32,6 @@ void name_analyse(devices_info *dev_info, FILE *devices, char *line);
  * 
  **/
 int get_touchpad_info(devices_info *dev_info, FILE *devices, char *line);
-
-/**
- * get information for keyboard event
- * 
- * @param char* string for file's lines
- * 
- **/
-int get_keyboard_info(devices_info *dev_info, FILE *devices, char *line);
 
 /**
  * 

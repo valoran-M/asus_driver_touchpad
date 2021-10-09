@@ -5,8 +5,8 @@
 
 #include "utility/utility.h"
 
-
-void max_min(devices_info *dev_info) {
+void max_min(devices_info *dev_info)
+{
     int abs[6] = {0}; // TO CHECK : 6 int isn't too wide ?
 
     ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs);
@@ -18,8 +18,8 @@ void max_min(devices_info *dev_info) {
     dev_info->y.max = abs[2];
 }
 
-void stop(devices_info *dev_info) {
-    close(dev_info->file_keyboard);
+void stop(devices_info *dev_info)
+{
     close(dev_info->file_touchpad);
     close(dev_info->i2c);
 
