@@ -7,6 +7,6 @@
  * run driver
  * 
  **/
-void run();
+void run(const devices_info *dev_info);
 
 #endif

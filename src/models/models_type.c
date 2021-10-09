@@ -3,16 +3,16 @@
 #include "utility/utility.h"
 #include "models/models_type.h"
 
-void key_init(enum models mod)
+void key_init(devices_info *dev_info, enum models mod)
 {
     switch (mod)
     {
     case ux581l:
-        info->keys = mod1_init();
+        dev_info->keys = mod1_init();
         break;
 
     default:
-        info->keys = mod1_init();
+        dev_info->keys = mod1_init();
         break;
     }
 }

@@ -14,31 +14,31 @@
 #include "event.h"
 #include "material.h"
 
-void activate_numpad()
+void activate_numpad(const devices_info *dev_info)
 {
-    emit(EV_KEY, KEY_NUMLOCK, 1);
-    emit(EV_SYN, SYN_REPORT, 0);
+    emit(dev_info, EV_KEY, KEY_NUMLOCK, 1);
+    emit(dev_info, EV_SYN, SYN_REPORT, 0);
     brightness = 1;
-    i2c_send();
-    ioctl(info->file_touchpad, EVIOCGRAB, 1);
+    i2c_send(dev_info);
+    ioctl(dev_info->file_touchpad, EVIOCGRAB, 1);
 }
 
-void desactivate_numpad()
+void deactivate_numpad(const devices_info *dev_info)
 {
-    emit(EV_KEY, KEY_NUMLOCK, 0);
-    emit(EV_SYN, SYN_REPORT, 0);
+    emit(dev_info, EV_KEY, KEY_NUMLOCK, 0);
+    emit(dev_info, EV_SYN, SYN_REPORT, 0);
     brightness = 0;
-    i2c_send();
-    ioctl(info->file_touchpad, EVIOCGRAB, 0);
+    i2c_send(dev_info);
+    ioctl(dev_info->file_touchpad, EVIOCGRAB, 0);
 }
 
-void change_brightness()
+void change_brightness(const devices_info *dev_info)
 {
     brightness = (brightness) % 3 + 1;
-    i2c_send();
+    i2c_send(dev_info);
 }
 
-void i2c_send()
+void i2c_send(const devices_info *dev_info)
 {
     buf[11] = bright[brightness];
 
@@ -56,5 +56,5 @@ void i2c_send()
             .nmsgs = sizeof(message) / sizeof(message[0]),
         };
 
-    ioctl(info->i2c, I2C_RDWR, &payload);
+    ioctl(dev_info->i2c, I2C_RDWR, &payload);
 }

@@ -12,27 +12,27 @@ static __u8 buf[] = {0x05, 0x00, 0x3d, 0x03, 0x06, 0x00, 0x07, 0x00, 0x0d, 0x14,
  * function who activate numpad and block touchpad
  * 
  **/
-void activate_numpad();
+void activate_numpad(const devices_info *dev_info);
 
 /**
  * 
  * function who desactivate numpad and unlock touchpad
  * 
  **/
-void desactivate_numpad();
+void deactivate_numpad(const devices_info *dev_info);
 
 /**
  * 
  * change brightness variable
  * 
  **/
-void change_brightness();
+void change_brightness(const devices_info *dev_info);
 
 /**
  * 
  * send buf with brigthness on i2c file
  * 
  **/
-void i2c_send();
+void i2c_send(const devices_info *dev_info);
 
 #endif

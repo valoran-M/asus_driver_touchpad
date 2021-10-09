@@ -10,19 +10,21 @@
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
 #define MAX_LINE 500
 
-static FILE *devices;
 
-static int touchapd = 0, keyboard = 0;
+/**
+ *
+ * setup devices_info
+ *
+ **/
+void get_devices(devices_info *dev_info);
 
 /**
  * name analyser in devices file
  * 
  * @param char*     line to scan
- * 
- * @return 0 if nothing / 1 if Touchpad / 2 Keyboard
- * 
+ *
  **/
-int name_analyse(char *);
+void name_analyse(devices_info *dev_info, FILE *devices, char *line);
 
 /**
  * get information for touchpad event
@@ -30,7 +32,7 @@ int name_analyse(char *);
  * @param char* string for file's lines
  * 
  **/
-void get_touchpad_info(char *line);
+int get_touchpad_info(devices_info *dev_info, FILE *devices, char *line);
 
 /**
  * get information for keyboard event
@@ -38,7 +40,7 @@ void get_touchpad_info(char *line);
  * @param char* string for file's lines
  * 
  **/
-void get_keyboard_info(char *line);
+int get_keyboard_info(devices_info *dev_info, FILE *devices, char *line);
 
 /**
  * 
@@ -48,7 +50,7 @@ void get_keyboard_info(char *line);
  * @param char* number in string 
  * 
  **/
-void get_number(char *line, char *number);
+void get_number(FILE *devices, const char *line, char *number);
 
 /**
  * 
@@ -57,6 +59,6 @@ void get_number(char *line, char *number);
  * @param char* output
  * 
  **/
-void stop_get_proc(char *output);
+void stop_get_proc(const char *output, FILE *devices);
 
 #endif

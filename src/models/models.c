@@ -7,16 +7,10 @@
 #include "utility/utility.h"
 #include "models/models_type.h"
 
-void init_models(int argc, char const *args[])
+void init_models(devices_info *dev_info, int argc, char const *args[])
 {
     enum models code = ux581l;
-    info->line = 4;
-    info->colonne = 5;
-    if (argc > 1)
-    {
-        info->line = 4;
-        info->colonne = 5;
-        code = ux581l;
-    }
-    key_init(code);
+    dev_info->line = 4;
+    dev_info->colonne = 5;
+    key_init(dev_info, code);
 }

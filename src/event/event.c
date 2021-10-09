@@ -6,28 +6,21 @@
 #include "event.h"
 #include "utility/utility.h"
 
-void sighandler(int sig)
-{
-    stop();
+void remove_key(const devices_info *dev_info, key k) {
+    emit(dev_info, EV_KEY, KEY_LEFTSHIFT, 0);
+    emit(dev_info, EV_KEY, k.key, 0);
+    emit(dev_info, EV_SYN, SYN_REPORT, 0);
 }
 
-void remove_key(key k)
-{
-    emit(EV_KEY, KEY_LEFTSHIFT, 0);
-    emit(EV_KEY, k.key, 0);
-    emit(EV_SYN, SYN_REPORT, 0);
+void emit_key(const devices_info *dev_info, key k) {
+    if (k.shifted) {
+        emit(dev_info, EV_KEY, KEY_LEFTSHIFT, 1);
+    }
+    emit(dev_info, EV_KEY, k.key, 1);
+    emit(dev_info, EV_SYN, SYN_REPORT, 0);
 }
 
-void emit_key(key k)
-{
-    if (k.shifted)
-        emit(EV_KEY, KEY_LEFTSHIFT, 1);
-    emit(EV_KEY, k.key, 1);
-    emit(EV_SYN, SYN_REPORT, 0);
-}
-
-void emit(int type, int code, int val)
-{
+void emit(const devices_info *dev_info, int type, int code, int val) {
     struct input_event ie;
 
     ie.type = type;
@@ -37,5 +30,5 @@ void emit(int type, int code, int val)
     ie.time.tv_sec = 0;
     ie.time.tv_usec = 0;
 
-    write(info->file_uinput, &ie, sizeof(ie));
+    write(dev_info->file_uinput, &ie, sizeof(ie));
 }

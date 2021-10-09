@@ -14,7 +14,7 @@ enum models
  * @param models model
  * 
  **/
-void key_init(enum models mod);
+void key_init(devices_info *dev_info, enum models mod);
 
 /**
  * init ux581l model
