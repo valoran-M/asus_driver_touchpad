@@ -11,7 +11,6 @@ int main(int argc, char const *argv[])
     max_min(&dev_info);
     init_models(&dev_info, argc, argv);
     setup_uinput(&dev_info);
-
     run(&dev_info);
 
     stop(&dev_info);
