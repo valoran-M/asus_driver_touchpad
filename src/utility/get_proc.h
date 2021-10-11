@@ -2,46 +2,70 @@
 #define GET_PROC_H
 
 #include <stdio.h>
+#include <regex.h>
 
 #include "utility.h"
 
-#define I2C_FILE "/dev/i2c-"
-#define EVENT_FILE "/dev/input/event"
+#define I2C_PATH "/dev/"
+#define EVENT_DIR "/dev/input/"
 #define DEVICES_LISTE_PATH "/proc/bus/input/devices"
-#define MAX_LINE 500
+#define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(event[0-9]*).*"
+#define I2C_REGEX "i2c-[0-9]*"
+#define DEVICE_MATCH_NUMBER 4
+#define BUFFER_SIZE 10000
+
 
 /**
  *
- * setup devices_info
+ * Detected interesting device and store their opened file in the passed structure
+ *
+ * @param const devices_info *dev_info : the struct witch will be initialized
  *
  **/
 void get_devices(devices_info *dev_info);
 
 /**
- * name analyser in devices file
- * 
- * @param char*     line to scan
+ *
+ * Read the device list file
+ *
+ * @return char* allocated buffer of the whole file
  *
  **/
-void name_analyse(devices_info *dev_info, FILE *devices, char *line);
+char *read_device_list();
 
 /**
- * get information for touchpad event
- * 
- * @param char* string for file's lines
- * 
+ *
+ * Extract the regex match number i and store it into *match_buffer
+ *
+ * @param const regmatch_t *matches : list of regex matches
+ * @param size_t i : position in the array of the selected match to extract
+ * @param char **match_buffer : pointer to the char array witch will receive the extracted data
+ * @param char *buffer : buffer to free in case of failure
+ *
  **/
-int get_touchpad_info(devices_info *dev_info, FILE *devices, char *line);
+void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer);
 
 /**
- * 
- * get first number in string
- * 
- * @param char* line
- * @param char* number in string 
- * 
+ *
+ * Open touchpad event file and store the new descriptor in dev_info->file_touchpad
+ *
+ * @param dev_info* dev_info : dev_info struct to store in
+ * @param char* buffer : pointer to free if an error occurs
+ * @param char* match_buffer : event file name
+ *
  **/
-void get_number(FILE *devices, const char *line, char *number);
+void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer);
+
+/**
+ *
+ * Open i2c file and store the new descriptor in dev_info->file_i2c
+ *
+ * @param dev_info* dev_info : dev_info struct to store in
+ * @param char* buffer : pointer to free if an error occurs
+ * @param char* match_buffer : i2c file name
+ *
+ **/
+void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);
 
 /**
  * 
@@ -50,6 +74,6 @@ void get_number(FILE *devices, const char *line, char *number);
  * @param char* output
  * 
  **/
-void stop_get_proc(const char *output, FILE *devices);
+void stop_get_proc(const char *output);
 
 #endif

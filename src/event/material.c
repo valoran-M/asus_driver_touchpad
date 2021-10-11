@@ -8,7 +8,9 @@
 #include <linux/i2c-dev.h>
 
 #ifndef I2C_M_RD
+
 #include <linux/i2c.h>
+
 #endif
 
 #include "event.h"
@@ -40,21 +42,25 @@ void change_brightness(const devices_info *dev_info)
 
 void i2c_send(const devices_info *dev_info)
 {
+    if (dev_info->i2c == -1) {
+        return; // Working without i2c
+    }
+
     buf[11] = bright[brightness];
 
     struct i2c_msg message[] = {
-        {
-            .addr = (__u16)0x15,
-            .buf = buf,
-            .len = (__u16)13,
-        },
+            {
+                    .addr = (__u16) 0x15,
+                    .buf = buf,
+                    .len = (__u16) 13,
+            },
     };
 
     struct i2c_rdwr_ioctl_data payload =
-        {
-            .msgs = message,
-            .nmsgs = sizeof(message) / sizeof(message[0]),
-        };
+            {
+                    .msgs = message,
+                    .nmsgs = sizeof(message) / sizeof(message[0]),
+            };
 
     ioctl(dev_info->i2c, I2C_RDWR, &payload);
 }

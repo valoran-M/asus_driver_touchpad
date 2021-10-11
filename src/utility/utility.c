@@ -21,14 +21,16 @@ void max_min(devices_info *dev_info)
 void stop(devices_info *dev_info)
 {
     close(dev_info->file_touchpad);
-    close(dev_info->i2c);
+    if (dev_info->i2c != -1) {
+        close(dev_info->i2c);
+    }
 
     ioctl(dev_info->file_uinput, UI_DEV_DESTROY);
-
     close(dev_info->file_uinput);
 
-    for (size_t i = 0; i < dev_info->line; i++)
+    for (size_t i = 0; i < dev_info->line; i++) {
         free(dev_info->keys[i]);
+    }
     free(dev_info->keys);
 
     exit(EXIT_SUCCESS);

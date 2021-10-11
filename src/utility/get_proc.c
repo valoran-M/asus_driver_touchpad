@@ -1,127 +1,198 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #include "utility.h"
 #include "get_proc.h"
 
-void get_devices(devices_info *dev_info)
-{
-    FILE *devices = fopen(DEVICES_LISTE_PATH, "r");
+void warning(const char *output);
 
-    if (devices == NULL)
-    {
-        stop_get_proc(
-            "\nsrc/init/get_proc.c -> get_devices :  Unable to open devices list\n", devices);
-    }
-
-    char line[MAX_LINE];
-    while (fgets(line, MAX_LINE, devices) != NULL)
-        if (strstr(line, "Name=") != NULL)
-            name_analyse(dev_info, devices, line);
-
-    if (dev_info->file_touchpad <= 0)
-        stop_get_proc(
-            "\nsrc/init/get_proc.c -> get_devices :  The device \"Asus Touchpad\" was not found\n",
-            devices);
-
-    fclose(devices);
-}
-
-void name_analyse(devices_info *dev_info, FILE *devices, char *line)
-{
-    fprintf(stderr, "LINE : %s", line);
-
-    if (strstr(line, "Touchpad") != NULL ||
-        strstr(line, "ELAN") != NULL ||
-        strstr(line, "SynPS/2") != NULL)
-        get_touchpad_info(dev_info, devices, line);
-}
-
-int get_touchpad_info(devices_info *dev_info, FILE *devices, char *line)
-{
-    const char *line_pointer;
-    char number[5];
-
-    while (fgets(line, MAX_LINE, devices) != NULL)
-    {
-        if (strstr(line, "Sysfs=") != NULL)
-        {
-            char i2c[] = "i2c-";
-            line_pointer = strstr(line, i2c);
-            if (line_pointer != NULL)
-            {
-                get_number(devices, line_pointer + sizeof(i2c) - 1, number);
-                char event_file[50] = I2C_FILE;
-                strcat(event_file, number);
-                dev_info->i2c = open(event_file, O_RDWR);
-
-                if (dev_info->i2c == -1)
-                {
-                    stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problem i2c\n",
-                                  devices);
-                }
-            }
-            else
-            {
-                stop_get_proc(
-                    "\nsrc/init/get_proc.c -> get_touchpad_info :  i2c coef is not found\n",
-                    devices);
-            }
-        }
-        else if (strstr(line, "Handlers=") != NULL)
-        {
-            char event[] = "event";
-            line_pointer = strstr(line, event);
-
-            if (line_pointer != NULL)
-            {
-                get_number(devices, line_pointer + sizeof(event) - 1, number);
-                char event_file[50] = EVENT_FILE;
-                strcat(event_file, number);
-                dev_info->file_touchpad = open(event_file, O_RDWR);
-
-                if (dev_info->file_touchpad == -1)
-                {
-                    stop_get_proc("\nsrc/init/get_proc.c -> get_touchpad_info : open problems\n",
-                                  devices);
-                }
-                return 1;
-            }
-            else
-            {
-                stop_get_proc(
-                    "\nsrc/init/get_proc.c -> get_touchpad_info :  event coef is not found\n",
-                    devices);
-            }
-        }
-    }
-    return 0;
-}
-
-void get_number(FILE *devices, const char *line, char *number)
-{
-    if (line == NULL)
-        stop_get_proc("\nsrc/init/get_proc.c -> get_number : line = NULL\n", devices);
-
-    int i;
-    for (i = 0; isdigit(*(line + i)); i++)
-        number[i] = *(line + i);
-
-    number[i] = '\0';
-}
-
-void stop_get_proc(const char *output, FILE *devices)
+__attribute__((noreturn))
+void stop_get_proc(const char *output)
 {
     fprintf(stderr, "%s", output);
-
-    if (devices != NULL)
-    {
-        fclose(devices);
-    }
-
     exit(EXIT_FAILURE);
 }
+
+void get_devices(devices_info *dev_info)
+{
+    char *buffer = read_device_list();
+
+    regex_t regex;
+    regmatch_t matches[DEVICE_MATCH_NUMBER];
+
+    if (regcomp(&regex, DEVICE_REGEX, REG_ICASE | REG_EXTENDED | REG_NEWLINE)) {
+        free(buffer);
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to compile regex.\n");
+    }
+
+    if (regexec(&regex, buffer, DEVICE_MATCH_NUMBER, matches, 0) == 0) {
+        regfree(&regex);
+
+        char *match_buffer = NULL;
+
+        extract_match(matches, 1, &match_buffer, buffer);
+        printf("Device Name : '%s'\n", match_buffer);
+
+        extract_match(matches, 3, &match_buffer, buffer);
+        open_touchpad(dev_info, buffer, match_buffer);
+
+        extract_match(matches, 2, &match_buffer, buffer);
+        open_i2c(dev_info, buffer, match_buffer);
+
+        free(match_buffer);
+        free(buffer);
+    }
+    else {
+        regfree(&regex);
+        free(buffer);
+        stop_get_proc(
+                "\nsrc/init/get_proc.c -> get_devices :  Unable to find desired substrings.\n");
+    }
+}
+
+void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
+{
+    char *event_filepath = malloc(strlen(EVENT_DIR) + strlen(match_buffer) + 1);
+
+    if (event_filepath == NULL) {
+        free(match_buffer);
+        free(buffer);
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+    }
+
+    strcpy(event_filepath, EVENT_DIR);
+    strcpy(event_filepath + strlen(EVENT_DIR), match_buffer);
+
+    printf("Event Path : '%s'\n", event_filepath);
+
+    int fd = open(event_filepath, O_RDWR); // Check if other flags are needed...
+
+    if (fd == -1) {
+        free(event_filepath);
+        free(match_buffer);
+        free(buffer);
+        stop_get_proc(
+                "\nsrc/init/get_proc.c -> get_devices :  Unable to open touchpad event file.\n");
+    }
+    dev_info->file_touchpad = fd;
+
+    free(event_filepath);
+}
+
+void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
+{
+    regex_t i2c_regex;
+    regmatch_t i2c_match;
+
+    if (regcomp(&i2c_regex, I2C_REGEX, REG_ICASE | REG_EXTENDED)) {
+        free(match_buffer);
+        free(buffer);
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to compile regex.\n");
+    }
+
+    int fd = -1;
+
+    if (regexec(&i2c_regex, match_buffer, 1, &i2c_match, 0) == 0) {
+        regfree(&i2c_regex);
+
+        char *i2c_file = NULL;
+        size_t match_size = i2c_match.rm_eo - i2c_match.rm_so;
+
+        i2c_file = malloc(match_size + 1);
+        if (i2c_file == NULL) {
+            free(match_buffer);
+            free(buffer);
+            stop_get_proc("\nbuffer/init/get_proc.c -> get_devices :  Bad alloc.\n");
+        }
+        strncpy(i2c_file, match_buffer + i2c_match.rm_so, match_size);
+        i2c_file[match_size] = '\0';
+
+        char *i2c_filepath = malloc(strlen(I2C_PATH) + strlen(i2c_file) + 1);
+
+        if (i2c_filepath == NULL) {
+            free(i2c_file);
+            free(match_buffer);
+            free(buffer);
+            stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+        }
+
+        strcpy(i2c_filepath, I2C_PATH);
+        strcat(i2c_filepath + strlen(I2C_PATH), i2c_file);
+        free(i2c_file);
+
+        printf("I2C Path : '%s'\n", i2c_filepath);
+
+        fd = open(i2c_filepath, O_RDWR); // Check if other flags are needed...
+
+        if (fd == -1) {
+            warning("Unable to open i2c file. Working without.\n");
+        }
+
+        free(i2c_filepath);
+    }
+    else {
+        regfree(&i2c_regex);
+        warning("i2c device not detected. Working without.\n");
+    }
+
+    dev_info->i2c = fd;
+}
+
+char *read_device_list()
+{
+    int devices = open(DEVICES_LISTE_PATH, O_RDONLY);
+    if (devices == -1) {
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to open devices list\n");
+    }
+
+    char *buffer = malloc(BUFFER_SIZE);
+    if (buffer == NULL) {
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+    }
+
+    long result = read(devices, buffer, BUFFER_SIZE);
+    if (result == -1) {
+        free(buffer);
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to read devices list.\n");
+    }
+
+    if (close(devices)) {
+        free(buffer);
+        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to close devices list.\n");
+    }
+
+    printf("Read bytes : %lu\n", result);
+
+    if (result == BUFFER_SIZE) {
+        warning("Warning : read bytes number equal buffer size. Working on a possible chunk of device list\n");
+    }
+    else {
+        buffer = realloc(buffer, result + 1);  // Make a proper string with a '\0' at the end.
+        buffer[result] = '\0';
+    }
+
+    return buffer;
+}
+
+void warning(const char *output)
+{
+    fprintf(stderr, "%s", output);
+}
+
+void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer)
+{
+    size_t match_size = matches[i].rm_eo - matches[i].rm_so;
+
+    *match_buffer = realloc(*match_buffer, match_size + 1);
+    if (*match_buffer == NULL) {
+        free(buffer);
+        stop_get_proc("\nbuffer/init/get_proc.c -> get_devices :  Bad alloc.\n");
+    }
+    strncpy(*match_buffer, buffer + matches[i].rm_so, match_size);
+
+    (*match_buffer)[match_size] = '\0';
+}
+
