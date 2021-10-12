@@ -76,4 +76,13 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);
  **/
 void stop_get_proc(const char *output);
 
+/**
+ *
+ * Print warning message
+ *
+ * @param char* output
+ *
+ **/
+void warning(const char *output);
+
 #endif

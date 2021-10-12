@@ -7,7 +7,11 @@
 #include "utility.h"
 #include "get_proc.h"
 
-void warning(const char *output);
+void warning(const char *output)
+{
+    fprintf(stderr, "%s", output);
+}
+
 
 __attribute__((noreturn))
 void stop_get_proc(const char *output)
@@ -175,11 +179,6 @@ char *read_device_list()
     }
 
     return buffer;
-}
-
-void warning(const char *output)
-{
-    fprintf(stderr, "%s", output);
 }
 
 void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer)
