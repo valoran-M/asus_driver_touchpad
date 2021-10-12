@@ -19,7 +19,7 @@
  *
  * Detected interesting device and store their opened file in the passed structure
  *
- * @param const devices_info *dev_info : the struct witch will be initialized
+ * @param devices_info *dev_info : the struct witch will be initialized
  *
  **/
 void get_devices(devices_info *dev_info);
