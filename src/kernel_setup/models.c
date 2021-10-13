@@ -1,9 +1,9 @@
 #include <linux/input-event-codes.h>
 
-#include "utility/utility.h"
-#include "models/models_type.h"
+#include "models.h"
+#include <stdlib.h>
 
-void key_init(devices_info *dev_info, enum models mod)
+void key_init(devices_info *dev_info, models mod)
 {
     switch (mod)
     {

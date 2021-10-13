@@ -1,7 +1,8 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef KEYMAP_H
+#define KEYMAP_H
 
-#include "utility/utility.h"
+#include "defines.h"
+#include "models.h"
 
 /**
  * initialise le modèle
@@ -12,4 +13,4 @@
  **/
 void init_models(devices_info *dev_info, int argc, char const *args[]);
 
-#endif
+#endif // KEYMAP_H

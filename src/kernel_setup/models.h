@@ -1,12 +1,12 @@
-#ifndef MODELS_TYPE
-#define MODELS_TYPE
+#ifndef MODELS_H
+#define MODELS_H
 
-#include "utility/utility.h"
+#include "defines.h"
 
-enum models
+typedef enum
 {
     ux581l
-};
+} models;
 
 /**
  * map keys with model in info
@@ -14,7 +14,7 @@ enum models
  * @param models model
  * 
  **/
-void key_init(devices_info *dev_info, enum models mod);
+void key_init(devices_info *dev_info, models mod);
 
 /**
  * init ux581l model
@@ -35,4 +35,4 @@ key **mod1_init();
  **/
 key **tab_init(int line, int colonne);
 
-#endif
+#endif // MODELS_H

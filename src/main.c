@@ -1,8 +1,8 @@
-#include "utility/uinput_init.h"
-#include "utility/utility.h"
-#include "models/models.h"
-#include "event/run.h"
-#include "utility/get_proc.h"
+#include "kernel_setup/uinput.h"
+#include "defines.h"
+#include "kernel_setup/keymap.h"
+#include "events/event_loop.h"
+#include "kernel_setup/device.h"
 
 int main(int argc, char const *argv[])
 {

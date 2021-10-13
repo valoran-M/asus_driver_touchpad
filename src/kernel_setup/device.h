@@ -1,19 +1,8 @@
-#ifndef GET_PROC_H
-#define GET_PROC_H
+#ifndef DEVICE_H
+#define DEVICE_H
 
-#include <stdio.h>
 #include <regex.h>
-
-#include "utility.h"
-
-#define I2C_PATH "/dev/"
-#define EVENT_DIR "/dev/input/"
-#define DEVICES_LISTE_PATH "/proc/bus/input/devices"
-#define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(event[0-9]*).*"
-#define I2C_REGEX "i2c-[0-9]*"
-#define DEVICE_MATCH_NUMBER 4
-#define BUFFER_SIZE 10000
-
+#include "defines.h"
 
 /**
  *
@@ -47,11 +36,11 @@ void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, cha
 
 /**
  *
- * Open touchpad event file and store the new descriptor in dev_info->file_touchpad
+ * Open touchpad events file and store the new descriptor in dev_info->file_touchpad
  *
  * @param dev_info* dev_info : dev_info struct to store in
  * @param char* buffer : pointer to free if an error occurs
- * @param char* match_buffer : event file name
+ * @param char* match_buffer : events file name
  *
  **/
 void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer);
@@ -66,6 +55,13 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer);
  *
  **/
 void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);
+
+/**
+ *
+ * add max and min in devices_info
+ *
+ **/
+void max_min(devices_info *dev_info);
 
 /**
  * 
@@ -85,4 +81,4 @@ void stop_get_proc(const char *output);
  **/
 void warning(const char *output);
 
-#endif
+#endif // DEVICE_H

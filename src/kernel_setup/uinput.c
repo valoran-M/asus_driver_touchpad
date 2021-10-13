@@ -3,8 +3,7 @@
 
 #include <linux/uinput.h>
 
-#include "utility/utility.h"
-#include "utility/uinput_init.h"
+#include "uinput.h"
 
 void setup_uinput(devices_info *dev_info)
 {

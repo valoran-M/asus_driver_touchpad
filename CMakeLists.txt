@@ -3,29 +3,28 @@ cmake_minimum_required(VERSION 3.0)
 project(asus_driver_touchpad VERSION 0.0.1)
 
 set(SRCS
-    src/event/run.c
-    src/event/material.c
-    src/event/event.c
+        src/events/event_loop.c
+        src/events/interface.c
+        src/events/keys_events.c
 
-    src/models/models.c
-    src/models/models_type.c
+        src/kernel_setup/keymap.c
+        src/kernel_setup/models.c
 
-    src/utility/get_proc.c
-    src/utility/utility.c
-    src/utility/uinput_init.c
+        src/kernel_setup/device.c
+        src/kernel_setup/uinput.c
 )
 
 set(HEADERS
-    src/event/event.h
-    src/event/material.h
-    src/event/event.h
+        src/events/keys_events.h
+        src/events/interface.h
+        src/events/keys_events.h
 
-    src/models/models.h
-    src/models/models_type.h
+        src/kernel_setup/keymap.h
+        src/kernel_setup/models.h
 
-    src/utility/get_proc.h
-    src/utility/utility.h
-    src/utility/uinput_init.h
+        src/kernel_setup/device.h
+        src/defines.h
+        src/kernel_setup/uinput.h
 )
 
 add_executable(asus_driver_touchpad src/main.c ${SRCS} ${HEADERS})

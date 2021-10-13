@@ -4,8 +4,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "utility.h"
-#include "get_proc.h"
+#include <linux/uinput.h>
+
+#include "device.h"
 
 void warning(const char *output)
 {
@@ -79,7 +80,7 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
         free(match_buffer);
         free(buffer);
         stop_get_proc(
-                "\nsrc/init/get_proc.c -> get_devices :  Unable to open touchpad event file.\n");
+                "\nsrc/init/get_proc.c -> get_devices :  Unable to open touchpad events file.\n");
     }
     dev_info->file_touchpad = fd;
 
@@ -195,3 +196,13 @@ void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, cha
     (*match_buffer)[match_size] = '\0';
 }
 
+void max_min(devices_info *dev_info)
+{
+    int abs[3] = {0}; // TO CHECK : 6 int isn't too wide ?
+
+    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs);
+    dev_info->max_x = (double) abs[2];
+
+    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs);
+    dev_info->max_y = (double) abs[2];
+}
