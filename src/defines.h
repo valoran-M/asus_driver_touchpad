@@ -2,11 +2,14 @@
 #define DEFINES_H
 
 #define I2C_PATH "/dev/"
-#define EVENT_DIR "/dev/input/"
-#define DEVICES_LISTE_PATH "/proc/bus/input/devices"
+#define EVENT_PATH "/dev/input/"
+
+#define DEVICES_LIST "/proc/bus/input/devices"
 #define UINPUT_FILE "/dev/uinput"
-#define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(events[0-9]*).*"
+
+#define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(event[0-9]*).*"
 #define I2C_REGEX "i2c-[0-9]*"
+
 #define DEVICE_MATCH_NUMBER 4
 #define BUFFER_SIZE 10000
 

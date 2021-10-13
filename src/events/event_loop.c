@@ -7,6 +7,8 @@
 #include <linux/uinput.h>
 
 #include "event_loop.h"
+#include "interface.h"
+#include "keys_events.h"
 
 int running = 1;
 
@@ -92,7 +94,9 @@ void run(const devices_info *dev_info)
             }
             else if (event.value == 1 && position.x < 0.06 && position.y < 0.07) {
                 finger = 0;
-                change_brightness(dev_info);
+                if (numlock) {
+                    change_brightness(dev_info);
+                }
             }
 
             if (numlock) {

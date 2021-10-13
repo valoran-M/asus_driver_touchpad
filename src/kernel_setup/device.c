@@ -37,6 +37,8 @@ void get_devices(devices_info *dev_info)
         regfree(&regex);
 
         char *match_buffer = NULL;
+        extract_match(matches, 0, &match_buffer, buffer);
+        printf("Match : '%s'", match_buffer);
 
         extract_match(matches, 1, &match_buffer, buffer);
         printf("Device Name : '%s'\n", match_buffer);
@@ -60,7 +62,7 @@ void get_devices(devices_info *dev_info)
 
 void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
 {
-    char *event_filepath = malloc(strlen(EVENT_DIR) + strlen(match_buffer) + 1);
+    char *event_filepath = malloc(strlen(EVENT_PATH) + strlen(match_buffer) + 1);
 
     if (event_filepath == NULL) {
         free(match_buffer);
@@ -68,8 +70,8 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
         stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
     }
 
-    strcpy(event_filepath, EVENT_DIR);
-    strcpy(event_filepath + strlen(EVENT_DIR), match_buffer);
+    strcpy(event_filepath, EVENT_PATH);
+    strcpy(event_filepath + strlen(EVENT_PATH), match_buffer);
 
     printf("Event Path : '%s'\n", event_filepath);
 
@@ -148,7 +150,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
 
 char *read_device_list()
 {
-    int devices = open(DEVICES_LISTE_PATH, O_RDONLY);
+    int devices = open(DEVICES_LIST, O_RDONLY);
     if (devices == -1) {
         stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to open devices list\n");
     }
