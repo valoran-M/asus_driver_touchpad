@@ -8,7 +8,7 @@
  * run driver
  * 
  **/
-void run(const devices_info *dev_info);
+void run(devices_info *dev_info);
 
 int ready_to_read(int fd);
 

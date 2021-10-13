@@ -38,6 +38,7 @@ typedef struct
     key **keys;
     unsigned int line;
     unsigned int colonne;
+    unsigned short brightness;
 } devices_info;
 
 #endif  // DEFINES_H

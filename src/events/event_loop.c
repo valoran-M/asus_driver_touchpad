@@ -35,7 +35,7 @@ void stop(devices_info *dev_info)
     exit(EXIT_SUCCESS);
 }
 
-void run(const devices_info *dev_info)
+void run(devices_info *dev_info)
 {
     struct input_event event;
     point position;

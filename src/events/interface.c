@@ -16,7 +16,6 @@ static __u8 bright[] = {0x00, 0x1f, 0x18, 0x01};
 
 static __u8 buf[] = {0x05, 0x00, 0x3d, 0x03, 0x06, 0x00, 0x07, 0x00, 0x0d, 0x14, 0x03, 0x1f, 0xad};
 
-
 void emit(const devices_info *dev_info, int type, int code, int val)
 {
     struct input_event ie;
@@ -33,25 +32,25 @@ void emit(const devices_info *dev_info, int type, int code, int val)
 
 void i2c_send(const devices_info *dev_info)
 {
-    if (dev_info->i2c == -1) {
-        return; // Working without i2c
-    }
 
-    buf[11] = bright[brightness];
+    if (dev_info->i2c == -1)
+        return; // Working without i2c
+
+    buf[11] = bright[dev_info->brightness];
 
     struct i2c_msg message[] = {
-            {
-                    .addr = (__u16) 0x15,
-                    .buf = buf,
-                    .len = (__u16) 13,
-            },
+        {
+            .addr = (__u16)0x15,
+            .buf = buf,
+            .len = (__u16)13,
+        },
     };
 
     struct i2c_rdwr_ioctl_data payload =
-            {
-                    .msgs = message,
-                    .nmsgs = sizeof(message) / sizeof(message[0]),
-            };
+        {
+            .msgs = message,
+            .nmsgs = sizeof(message) / sizeof(message[0]),
+        };
 
     ioctl(dev_info->i2c, I2C_RDWR, &payload);
 }

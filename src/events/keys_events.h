@@ -25,20 +25,20 @@ void release_key(const devices_info *dev_info, key k);
  * function who activate numpad and block touchpad
  *
  **/
-void activate_numpad(const devices_info *dev_info);
+void activate_numpad(devices_info *dev_info);
 
 /**
  *
  * function who desactivate numpad and unlock touchpad
  *
  **/
-void deactivate_numpad(const devices_info *dev_info);
+void deactivate_numpad(devices_info *dev_info);
 
 /**
  *
  * change brightness variable
  *
  **/
-void change_brightness(const devices_info *dev_info);
+void change_brightness(devices_info *dev_info);
 
 #endif  // KEY_EVENTS_H
