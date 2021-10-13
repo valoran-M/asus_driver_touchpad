@@ -1,5 +1,4 @@
-#include <linux/uinput.h>#include "interface.h"
-
+#include <linux/uinput.h>
 
 #include "keys_events.h"
 

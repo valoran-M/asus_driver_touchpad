@@ -37,9 +37,6 @@ void get_devices(devices_info *dev_info)
         regfree(&regex);
 
         char *match_buffer = NULL;
-        extract_match(matches, 0, &match_buffer, buffer);
-        printf("Match : '%s'", match_buffer);
-
         extract_match(matches, 1, &match_buffer, buffer);
         printf("Device Name : '%s'\n", match_buffer);
 
@@ -76,17 +73,16 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
     printf("Event Path : '%s'\n", event_filepath);
 
     int fd = open(event_filepath, O_RDWR); // Check if other flags are needed...
+    free(event_filepath);
 
     if (fd == -1) {
-        free(event_filepath);
         free(match_buffer);
         free(buffer);
         stop_get_proc(
                 "\nsrc/init/get_proc.c -> get_devices :  Unable to open touchpad events file.\n");
     }
-    dev_info->file_touchpad = fd;
 
-    free(event_filepath);
+    dev_info->file_touchpad = fd;
 }
 
 void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
@@ -133,12 +129,11 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
         printf("I2C Path : '%s'\n", i2c_filepath);
 
         fd = open(i2c_filepath, O_RDWR); // Check if other flags are needed...
+        free(i2c_filepath);
 
         if (fd == -1) {
             warning("Unable to open i2c file. Working without.\n");
         }
-
-        free(i2c_filepath);
     }
     else {
         regfree(&i2c_regex);
@@ -200,7 +195,7 @@ void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, cha
 
 void max_min(devices_info *dev_info)
 {
-    int abs[3] = {0}; // TO CHECK : 6 int isn't too wide ?
+    int abs[5] = {0}; // TO CHECK : 6 int isn't too wide ?
 
     ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs);
     dev_info->max_x = (double) abs[2];
