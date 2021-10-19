@@ -51,7 +51,7 @@ void ux581l_mode(devices_info *dev_info)
     dev_info->colonne = 5;
     dev_info->keys = array_init(dev_info->line, dev_info->colonne);
 
-    int code = KEY_9;
+    unsigned short code = KEY_9;
     for (int line = 0; line <= 2; line++) {
         for (int col = 2; col >= 0; col--) {
             dev_info->keys[line][col] = (key) {1, code};
