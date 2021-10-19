@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -7,19 +6,6 @@
 #include <linux/uinput.h>
 
 #include "device.h"
-
-void warning(const char *output)
-{
-    fprintf(stderr, "%s", output);
-}
-
-
-__attribute__((noreturn))
-void stop_get_proc(const char *output)
-{
-    fprintf(stderr, "%s", output);
-    exit(EXIT_FAILURE);
-}
 
 void get_devices(devices_info *dev_info)
 {
@@ -30,7 +16,7 @@ void get_devices(devices_info *dev_info)
 
     if (regcomp(&regex, DEVICE_REGEX, REG_ICASE | REG_EXTENDED | REG_NEWLINE)) {
         free(buffer);
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to compile regex.\n");
+        error("Unable to compile device regex.\n");
     }
 
     if (regexec(&regex, buffer, DEVICE_MATCH_NUMBER, matches, 0) == 0) {
@@ -52,8 +38,7 @@ void get_devices(devices_info *dev_info)
     else {
         regfree(&regex);
         free(buffer);
-        stop_get_proc(
-                "\nsrc/init/get_proc.c -> get_devices :  Unable to find desired substrings.\n");
+        error("No regex match. Unable to find a proper device.\n");
     }
 }
 
@@ -64,7 +49,7 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
     if (event_filepath == NULL) {
         free(match_buffer);
         free(buffer);
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+        error("Bad alloc (event_filepath@open_touchpad).\n");
     }
 
     strcpy(event_filepath, EVENT_PATH);
@@ -78,8 +63,7 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
     if (fd == -1) {
         free(match_buffer);
         free(buffer);
-        stop_get_proc(
-                "\nsrc/init/get_proc.c -> get_devices :  Unable to open touchpad events file.\n");
+        error("Unable to open touchpad events file.\n");
     }
 
     dev_info->file_touchpad = fd;
@@ -93,7 +77,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
     if (regcomp(&i2c_regex, I2C_REGEX, REG_ICASE | REG_EXTENDED)) {
         free(match_buffer);
         free(buffer);
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to compile regex.\n");
+        error("Failed to compile i2c regex.\n");
     }
 
     int fd = -1;
@@ -108,7 +92,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
         if (i2c_file == NULL) {
             free(match_buffer);
             free(buffer);
-            stop_get_proc("\nbuffer/init/get_proc.c -> get_devices :  Bad alloc.\n");
+            error("Bad alloc (i2c_file@open_i2c).\n");
         }
         strncpy(i2c_file, match_buffer + i2c_match.rm_so, match_size);
         i2c_file[match_size] = '\0';
@@ -119,7 +103,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
             free(i2c_file);
             free(match_buffer);
             free(buffer);
-            stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+            error("Bad alloc (i2c_filepath@open_i2c).\n");
         }
 
         strcpy(i2c_filepath, I2C_PATH);
@@ -132,12 +116,12 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
         free(i2c_filepath);
 
         if (fd == -1) {
-            warning("Unable to open i2c file. Working without.\n");
+            warning("Failed to open i2c file. i2c feedback disabled.\n");
         }
     }
     else {
         regfree(&i2c_regex);
-        warning("i2c device not detected. Working without.\n");
+        warning("No i2c devices detected. i2c feedback disabled.\n");
     }
 
     dev_info->i2c = fd;
@@ -147,29 +131,29 @@ char *read_device_list()
 {
     int devices = open(DEVICES_LIST, O_RDONLY);
     if (devices == -1) {
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to open devices list\n");
+        error("Failed to open devices file list.\n");
     }
 
     char *buffer = malloc(BUFFER_SIZE);
     if (buffer == NULL) {
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Bad alloc.\n");
+        error("Bad alloc (buffer@read_device_list).\n");
     }
 
     long result = read(devices, buffer, BUFFER_SIZE);
     if (result == -1) {
         free(buffer);
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to read devices list.\n");
+        error("Unable to read devices list.\n");
     }
 
     if (close(devices)) {
         free(buffer);
-        stop_get_proc("\nsrc/init/get_proc.c -> get_devices :  Unable to close devices list.\n");
+        error("Failed to close devices file list.\n");
     }
 
     printf("Read bytes : %lu\n", result);
 
     if (result == BUFFER_SIZE) {
-        warning("Warning : read bytes number equal buffer size. Working on a possible chunk of device list\n");
+        warning("Read bytes number equal buffer size. Working on a possible chunk of device list.\n");
     }
     else {
         buffer = realloc(buffer, result + 1);  // Make a proper string with a '\0' at the end.
@@ -186,7 +170,7 @@ void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, cha
     *match_buffer = realloc(*match_buffer, match_size + 1);
     if (*match_buffer == NULL) {
         free(buffer);
-        stop_get_proc("\nbuffer/init/get_proc.c -> get_devices :  Bad alloc.\n");
+        error("Bad alloc (*match_buffer@extract_match).\n");
     }
     strncpy(*match_buffer, buffer + matches[i].rm_so, match_size);
 
@@ -195,11 +179,11 @@ void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, cha
 
 void max_min(devices_info *dev_info)
 {
-    int abs[5] = {0}; // TO CHECK : 6 int isn't too wide ?
+    int abs[5] = {0};
 
-    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs);
+    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs));
     dev_info->max_x = (double) abs[2];
 
-    ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs);
+    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs));
     dev_info->max_y = (double) abs[2];
 }

@@ -5,6 +5,7 @@
 #include <sys/poll.h>
 #include <stdlib.h>
 #include <linux/uinput.h>
+#include <stdio.h>
 
 #include "event_loop.h"
 #include "interface.h"
@@ -44,8 +45,6 @@ void run(devices_info *dev_info)
     key value = (key) {-1, -1};
     position.x = 0;
     position.y = 0;
-    position.x = 0;
-    position.y = 0;
 
     signal(SIGINT, sighandler);
 
@@ -67,6 +66,8 @@ void run(devices_info *dev_info)
             else if (event.code == ABS_MT_POSITION_Y) {
                 position.y = event.value / dev_info->max_y;
             }
+            printf("Position : %f, %f\n", position.x, position.y);
+
             continue;
         }
 
