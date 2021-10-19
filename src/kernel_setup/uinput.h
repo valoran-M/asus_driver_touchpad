@@ -2,7 +2,7 @@
 #define UINPUT_SETUP_H
 
 #include "defines.h"
-
+#include "error.h"
 /**
  * 
  * setup uinput devices

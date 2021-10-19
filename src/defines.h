@@ -24,7 +24,7 @@ typedef struct
 typedef struct
 {
     int shifted;
-    int key;
+    unsigned short key;
 } key;
 
 typedef struct
@@ -36,8 +36,8 @@ typedef struct
     double max_y;
 
     key **keys;
-    unsigned int line;
-    unsigned int colonne;
+    unsigned short line;
+    unsigned short colonne;
     unsigned short brightness;
 } devices_info;
 
