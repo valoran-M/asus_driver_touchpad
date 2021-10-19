@@ -24,15 +24,11 @@ void warning(const char *output);
 
 /**
  *
- * Print info message
+ * Check ioctl return code
  *
- * @param char* output
+ * @param int code
  *
  **/
-//void info(const char *output, const void* data);
-
-//void safe_ioctl(int fd, unsigned long int request, void *data);
-
 void check_ioctl(int return_code);
 
 #endif //ASUS_DRIVER_TOUCHPAD_ERROR_H
