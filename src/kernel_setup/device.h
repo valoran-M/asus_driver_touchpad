@@ -3,7 +3,7 @@
 
 #include <regex.h>
 #include "defines.h"
-#include "utils/error.h"
+#include "utils/utils.h"
 
 /**
  *
@@ -21,7 +21,7 @@ void get_devices(devices_info *dev_info);
  * @return char* allocated buffer of the whole file
  *
  **/
-char *read_device_list();
+char *read_device_list(devices_info *dev_info);
 
 /**
  *
@@ -33,7 +33,7 @@ char *read_device_list();
  * @param char *buffer : buffer to free in case of failure
  *
  **/
-void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer);
+void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer, devices_info *dev_info);
 
 /**
  *

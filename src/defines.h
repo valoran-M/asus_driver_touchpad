@@ -38,8 +38,10 @@ typedef struct
     int file_uinput;
     int file_i2c;
     unsigned short brightness;
-    point max;
+
+    point range;
     point min;
+
     keymap mapping;
 } devices_info;
 

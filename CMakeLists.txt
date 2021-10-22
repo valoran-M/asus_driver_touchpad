@@ -9,7 +9,7 @@ set(SRCS
         src/kernel_setup/models.c
         src/kernel_setup/device.c
         src/kernel_setup/uinput.c
-        src/utils/error.c
+        src/utils/utils.c
         src/utils/keymap.c
         )
 
@@ -21,7 +21,7 @@ set(HEADERS
         src/kernel_setup/device.h
         src/defines.h
         src/kernel_setup/uinput.h
-        src/utils/error.h
+        src/utils/utils.h
         src/utils/keymap.h
         )
 

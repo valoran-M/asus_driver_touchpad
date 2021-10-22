@@ -14,7 +14,7 @@
 static __u8 bright[] = {0x00, 0x1f, 0x18, 0x01};
 static __u8 buf[] = {0x05, 0x00, 0x3d, 0x03, 0x06, 0x00, 0x07, 0x00, 0x0d, 0x14, 0x03, 0x1f, 0xad};
 
-void emit(const devices_info *dev_info, unsigned short type, unsigned short code, int val)
+void emit(devices_info *dev_info, unsigned short type, unsigned short code, int val)
 {
     struct input_event ie;
 
@@ -28,11 +28,11 @@ void emit(const devices_info *dev_info, unsigned short type, unsigned short code
     size_t to_write = sizeof(ie);
 
     if (write(dev_info->file_uinput, &ie, to_write) != to_write) {
-        error("Failed to emit key.");
+        error("Failed to emit key.", dev_info);
     }
 }
 
-void i2c_send(const devices_info *dev_info)
+void i2c_send(devices_info *dev_info)
 {
 
     if (dev_info->file_i2c == -1) {
@@ -55,5 +55,5 @@ void i2c_send(const devices_info *dev_info)
                     .nmsgs = sizeof(message) / sizeof(message[0]),
             };
 
-    check_ioctl(ioctl(dev_info->file_i2c, I2C_RDWR, &payload));
+    check_ioctl(ioctl(dev_info->file_i2c, I2C_RDWR, &payload), dev_info);
 }

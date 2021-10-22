@@ -2,7 +2,7 @@
 #define KEY_EVENTS_H
 
 #include "defines.h"
-#include "utils/error.h"
+#include "utils/utils.h"
 #include "interface.h"
 
 /**
@@ -11,7 +11,7 @@
  * @param key
  * 
  **/
-void press_key(const devices_info *dev_info, key k);
+void press_key(devices_info *dev_info, key k);
 
 /**
  * remove key with key struct param
@@ -19,7 +19,7 @@ void press_key(const devices_info *dev_info, key k);
  * @param key
  * 
  **/
-void release_key(const devices_info *dev_info, key k);
+void release_key(devices_info *dev_info, key k);
 
 /**
  *

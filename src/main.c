@@ -13,6 +13,6 @@ int main(int argc, char const *argv[])
     setup_uinput(&dev_info);
     run(&dev_info);
 
-    stop(&dev_info);
+    cleanup(&dev_info);
     return 0;
 }

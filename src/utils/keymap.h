@@ -2,7 +2,7 @@
 #define ASUS_DRIVER_TOUCHPAD_KEYMAP_H
 
 #include "defines.h"
-#include "utils/error.h"
+#include "utils/utils.h"
 
 void keymap_init(devices_info *dev_info, unsigned short line, unsigned short colonne);
 
