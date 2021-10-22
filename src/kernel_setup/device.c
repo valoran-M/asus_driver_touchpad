@@ -9,27 +9,27 @@
 
 void get_devices(devices_info *dev_info)
 {
-    char *buffer = read_device_list();
+    char *buffer = read_device_list(dev_info);
 
     regex_t regex;
     regmatch_t matches[DEVICE_MATCH_NUMBER];
 
     if (regcomp(&regex, DEVICE_REGEX, REG_ICASE | REG_EXTENDED | REG_NEWLINE)) {
         free(buffer);
-        error("Unable to compile device regex.\n");
+        error("Unable to compile device regex.\n", dev_info);
     }
 
     if (regexec(&regex, buffer, DEVICE_MATCH_NUMBER, matches, 0) == 0) {
         regfree(&regex);
 
         char *match_buffer = NULL;
-        extract_match(matches, 1, &match_buffer, buffer);
+        extract_match(matches, 1, &match_buffer, buffer, dev_info);
         printf("Device Name : '%s'\n", match_buffer);
 
-        extract_match(matches, 3, &match_buffer, buffer);
+        extract_match(matches, 3, &match_buffer, buffer, dev_info);
         open_touchpad(dev_info, buffer, match_buffer);
 
-        extract_match(matches, 2, &match_buffer, buffer);
+        extract_match(matches, 2, &match_buffer, buffer, dev_info);
         open_i2c(dev_info, buffer, match_buffer);
 
         free(match_buffer);
@@ -38,7 +38,7 @@ void get_devices(devices_info *dev_info)
     else {
         regfree(&regex);
         free(buffer);
-        error("No regex match. Unable to find a proper device.\n");
+        error("No regex match. Unable to find a proper device.\n", dev_info);
     }
 }
 
@@ -49,7 +49,7 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
     if (event_filepath == NULL) {
         free(match_buffer);
         free(buffer);
-        error("Bad alloc (event_filepath@open_touchpad).\n");
+        error("Bad alloc (event_filepath@open_touchpad).\n", dev_info);
     }
 
     strcpy(event_filepath, EVENT_PATH);
@@ -63,7 +63,7 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer)
     if (fd == -1) {
         free(match_buffer);
         free(buffer);
-        error("Unable to open touchpad events file.\n");
+        error("Unable to open touchpad events file.\n", dev_info);
     }
 
     dev_info->file_touchpad = fd;
@@ -77,7 +77,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
     if (regcomp(&i2c_regex, I2C_REGEX, REG_ICASE | REG_EXTENDED)) {
         free(match_buffer);
         free(buffer);
-        error("Failed to compile file_i2c regex.\n");
+        error("Failed to compile file_i2c regex.\n", dev_info);
     }
 
     int fd = -1;
@@ -92,7 +92,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
         if (i2c_file == NULL) {
             free(match_buffer);
             free(buffer);
-            error("Bad alloc (i2c_file@open_i2c).\n");
+            error("Bad alloc (i2c_file@open_i2c).\n", dev_info);
         }
         strncpy(i2c_file, match_buffer + i2c_match.rm_so, match_size);
         i2c_file[match_size] = '\0';
@@ -103,7 +103,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
             free(i2c_file);
             free(match_buffer);
             free(buffer);
-            error("Bad alloc (i2c_filepath@open_i2c).\n");
+            error("Bad alloc (i2c_filepath@open_i2c).\n", dev_info);
         }
 
         strcpy(i2c_filepath, I2C_PATH);
@@ -127,27 +127,27 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
     dev_info->file_i2c = fd;
 }
 
-char *read_device_list()
+char *read_device_list(devices_info *dev_info)
 {
     int devices = open(DEVICES_LIST, O_RDONLY);
     if (devices == -1) {
-        error("Failed to open devices file list.\n");
+        error("Failed to open devices file list.\n", dev_info);
     }
 
     char *buffer = malloc(BUFFER_SIZE);
     if (buffer == NULL) {
-        error("Bad alloc (buffer@read_device_list).\n");
+        error("Bad alloc (buffer@read_device_list).\n", dev_info);
     }
 
     long result = read(devices, buffer, BUFFER_SIZE);
     if (result == -1) {
         free(buffer);
-        error("Unable to read devices list.\n");
+        error("Unable to read devices list.\n", dev_info);
     }
 
     if (close(devices)) {
         free(buffer);
-        error("Failed to close devices file list.\n");
+        error("Failed to close devices file list.\n", dev_info);
     }
 
     printf("Read bytes : %lu\n", result);
@@ -163,14 +163,15 @@ char *read_device_list()
     return buffer;
 }
 
-void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer)
+void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer,
+                   devices_info *dev_info)
 {
     size_t match_size = matches[i].rm_eo - matches[i].rm_so;
 
     *match_buffer = realloc(*match_buffer, match_size + 1);
     if (*match_buffer == NULL) {
         free(buffer);
-        error("Bad alloc (*match_buffer@extract_match).\n");
+        error("Bad alloc (*match_buffer@extract_match).\n", dev_info);
     }
     strncpy(*match_buffer, buffer + matches[i].rm_so, match_size);
 
@@ -181,11 +182,11 @@ void max_min(devices_info *dev_info)
 {
     int abs[5] = {0};
 
-    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs));
+    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs), dev_info);
     dev_info->min.x = (double) abs[1];
-    dev_info->max.x = (double) abs[2];
+    dev_info->range.x = (double) abs[2] - dev_info->min.x;
 
-    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs));
+    check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs), dev_info);
     dev_info->min.y = (double) abs[1];
-    dev_info->max.y = (double) abs[2];
+    dev_info->range.y = (double) abs[2] - dev_info->min.y;
 }

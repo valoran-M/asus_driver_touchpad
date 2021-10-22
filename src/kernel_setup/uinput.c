@@ -12,16 +12,17 @@ void setup_uinput(devices_info *dev_info)
     dev_info->file_uinput = open(UINPUT_FILE, O_WRONLY | O_NONBLOCK);
 
     if (dev_info->file_uinput == -1) {
-        error("Failed to open uinput file.");
+        error("Failed to open uinput file.", dev_info);
     }
 
-    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_EVBIT, EV_KEY));
-    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK));
-    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_LEFTSHIFT));
+    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_EVBIT, EV_KEY), dev_info);
+    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK), dev_info);
+    check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_LEFTSHIFT), dev_info);
 
-    for (size_t line = 0; line < dev_info->mapping.line; line++) {
-        for (size_t col = 0; col < dev_info->mapping.colonne; col++) {
-            check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, keymap_get(dev_info, line, col).key));
+    for (unsigned short line = 0; line < dev_info->mapping.line; line++) {
+        for (unsigned short col = 0; col < dev_info->mapping.colonne; col++) {
+            check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT,
+                              keymap_get(dev_info, line, col).key), dev_info);
         }
     }
 
@@ -31,6 +32,6 @@ void setup_uinput(devices_info *dev_info)
     u_setup.id.product = 0xcc59;
     strcpy(u_setup.name, "Asus Touchpad/Numpad driver");
 
-    check_ioctl(ioctl(dev_info->file_uinput, UI_DEV_SETUP, &u_setup));
-    check_ioctl(ioctl(dev_info->file_uinput, UI_DEV_CREATE));
+    check_ioctl(ioctl(dev_info->file_uinput, UI_DEV_SETUP, &u_setup), dev_info);
+    check_ioctl(ioctl(dev_info->file_uinput, UI_DEV_CREATE), dev_info);
 }

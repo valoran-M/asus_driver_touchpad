@@ -2,7 +2,7 @@
 #define MODELS_H
 
 #include "defines.h"
-#include "utils/error.h"
+#include "utils/utils.h"
 #include "utils/keymap.h"
 
 typedef enum

@@ -5,6 +5,7 @@
 void init_models(devices_info *dev_info, int argc, char const *args[])
 {
     models_selections(dev_info, ux581l);
+//    models_selections(dev_info, basic);
 }
 
 void models_selections(devices_info *dev_info, models mod)
@@ -18,7 +19,7 @@ void models_selections(devices_info *dev_info, models mod)
             basic_mode(dev_info);
             break;
         default:
-            error("Unable to recognize targets model.");
+            error("Unable to recognize targets model.", dev_info);
     }
 }
 
@@ -49,7 +50,7 @@ void ux581l_mode(devices_info *dev_info)
 
 void basic_mode(devices_info *dev_info)
 {
-    keymap_init(dev_info, 3, 4);
+    keymap_init(dev_info, 4, 3);
 
     unsigned short code = KEY_9;
     for (short line = 0; line <= 2; line++) {
@@ -58,7 +59,7 @@ void basic_mode(devices_info *dev_info)
             code--;
         }
     }
-    keymap_set(dev_info, 0, 3, (key) {0, KEY_RESERVED});
-    keymap_set(dev_info, 1, 3, (key) {1, KEY_0});
-    keymap_set(dev_info, 2, 3, (key) {0, KEY_RESERVED});
+    keymap_set(dev_info, 3, 0, (key) {0, KEY_RESERVED});
+    keymap_set(dev_info, 3, 1, (key) {1, KEY_0});
+    keymap_set(dev_info, 3, 2, (key) {0, KEY_RESERVED});
 }
