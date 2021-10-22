@@ -2,8 +2,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/ioctl.h>
 
 __attribute__((noreturn))
 void error(const char *output)
