@@ -7,6 +7,8 @@
 #include <linux/uinput.h>
 #include <stdio.h>
 
+#include "utils/keymap.h"
+
 #include "event_loop.h"
 #include "interface.h"
 #include "keys_events.h"
@@ -21,17 +23,14 @@ void sighandler(int sig)
 void stop(devices_info *dev_info)
 {
     close(dev_info->file_touchpad);
-    if (dev_info->i2c != -1) {
-        close(dev_info->i2c);
+    if (dev_info->file_i2c != -1) {
+        close(dev_info->file_i2c);
     }
 
     ioctl(dev_info->file_uinput, UI_DEV_DESTROY);
     close(dev_info->file_uinput);
 
-    for (size_t i = 0; i < dev_info->line; i++) {
-        free(dev_info->keys[i]);
-    }
-    free(dev_info->keys);
+    keymap_free(dev_info);
 
     exit(EXIT_SUCCESS);
 }
@@ -61,10 +60,10 @@ void run(devices_info *dev_info)
 
         if (event.type == EV_ABS) {
             if (event.code == ABS_MT_POSITION_X) {
-                position.x = event.value / dev_info->max_x;
+                position.x = event.value / dev_info->max.x;
             }
             else if (event.code == ABS_MT_POSITION_Y) {
-                position.y = event.value / dev_info->max_y;
+                position.y = event.value / dev_info->max.y;
             }
             printf("Position : %f, %f\n", position.x, position.y);
 
@@ -104,11 +103,11 @@ void run(devices_info *dev_info)
                 if (finger == 1) {
                     finger = 2;
 
-                    col = (int) floor((double) dev_info->colonne * position.x);
-                    line = (int) floor(((double) dev_info->line * position.y) - 0.3);
+                    col = (int) floor(dev_info->mapping.colonne * position.x);
+                    line = (int) floor((dev_info->mapping.line * position.y) - 0.3);
 
                     if (line >= 0) {
-                        value = dev_info->keys[line][col];
+                        value = keymap_get(dev_info, line, col);
                         press_key(dev_info, value);
                     }
                 }

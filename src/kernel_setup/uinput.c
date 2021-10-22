@@ -3,7 +3,6 @@
 
 #include <linux/uinput.h>
 
-#include "defines.h"
 #include "uinput.h"
 
 void setup_uinput(devices_info *dev_info)
@@ -20,9 +19,9 @@ void setup_uinput(devices_info *dev_info)
     check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK));
     check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_LEFTSHIFT));
 
-    for (size_t line = 0; line < dev_info->line; line++) {
-        for (size_t col = 0; col < dev_info->colonne; col++) {
-            check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, dev_info->keys[line][col].key));
+    for (size_t line = 0; line < dev_info->mapping.line; line++) {
+        for (size_t col = 0; col < dev_info->mapping.colonne; col++) {
+            check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, keymap_get(dev_info, line, col).key));
         }
     }
 

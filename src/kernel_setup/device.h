@@ -3,7 +3,7 @@
 
 #include <regex.h>
 #include "defines.h"
-#include "error.h"
+#include "utils/error.h"
 
 /**
  *
@@ -48,11 +48,11 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer);
 
 /**
  *
- * Open i2c file and store the new descriptor in dev_info->file_i2c
+ * Open file_i2c file and store the new descriptor in dev_info->file_i2c
  *
  * @param dev_info* dev_info : dev_info struct to store in
  * @param char* buffer : pointer to free if an error occurs
- * @param char* match_buffer : i2c file name
+ * @param char* match_buffer : file_i2c file name
  *
  **/
 void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);

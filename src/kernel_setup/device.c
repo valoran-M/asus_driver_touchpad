@@ -77,7 +77,7 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
     if (regcomp(&i2c_regex, I2C_REGEX, REG_ICASE | REG_EXTENDED)) {
         free(match_buffer);
         free(buffer);
-        error("Failed to compile i2c regex.\n");
+        error("Failed to compile file_i2c regex.\n");
     }
 
     int fd = -1;
@@ -116,15 +116,15 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer)
         free(i2c_filepath);
 
         if (fd == -1) {
-            warning("Failed to open i2c file. i2c feedback disabled.\n");
+            warning("Failed to open file_i2c file. file_i2c feedback disabled.\n");
         }
     }
     else {
         regfree(&i2c_regex);
-        warning("No i2c devices detected. i2c feedback disabled.\n");
+        warning("No file_i2c devices detected. file_i2c feedback disabled.\n");
     }
 
-    dev_info->i2c = fd;
+    dev_info->file_i2c = fd;
 }
 
 char *read_device_list()
@@ -182,8 +182,10 @@ void max_min(devices_info *dev_info)
     int abs[5] = {0};
 
     check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_X), abs));
-    dev_info->max_x = (double) abs[2];
+    dev_info->min.x = (double) abs[1];
+    dev_info->max.x = (double) abs[2];
 
     check_ioctl(ioctl(dev_info->file_touchpad, EVIOCGABS(ABS_Y), abs));
-    dev_info->max_y = (double) abs[2];
+    dev_info->min.y = (double) abs[1];
+    dev_info->max.y = (double) abs[2];
 }
