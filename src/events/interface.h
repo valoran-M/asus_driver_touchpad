@@ -2,11 +2,11 @@
 #define INTERFACE_H
 
 #include "defines.h"
-#include "error.h"
+#include "utils/error.h"
 
 /**
  * 
- * send buf with brigthness on i2c file
+ * send buf with brigthness on file_i2c file
  * 
  **/
 void i2c_send(const devices_info *dev_info);

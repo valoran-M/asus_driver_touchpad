@@ -2,7 +2,9 @@
 #define UINPUT_SETUP_H
 
 #include "defines.h"
-#include "error.h"
+#include "utils/error.h"
+#include "utils/keymap.h"
+
 /**
  * 
  * setup uinput devices

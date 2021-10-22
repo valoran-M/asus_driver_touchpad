@@ -2,12 +2,13 @@
 #define MODELS_H
 
 #include "defines.h"
-#include "error.h"
+#include "utils/error.h"
+#include "utils/keymap.h"
 
 typedef enum
 {
     ux581l,
-    basic
+    basic,
 } models;
 
 /**
@@ -36,7 +37,7 @@ key **array_init(unsigned short line, unsigned short colonne);
  * @param models model
  * 
  **/
-void keymap_init(devices_info *dev_info, models mod);
+void models_selections(devices_info *dev_info, models mod);
 
 /**
  * init ux581l model

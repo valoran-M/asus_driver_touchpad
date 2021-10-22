@@ -8,11 +8,10 @@
 #define UINPUT_FILE "/dev/uinput"
 
 #define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(event[0-9]*).*"
-#define I2C_REGEX "i2c-[0-9]*"
+#define I2C_REGEX "file_i2c-[0-9]*"
 
 #define DEVICE_MATCH_NUMBER 4
 #define BUFFER_SIZE 10000
-
 
 typedef struct
 {
@@ -20,25 +19,28 @@ typedef struct
     double y;
 } point;
 
-
 typedef struct
 {
-    int shifted;
+    unsigned char shifted;
     unsigned short key;
 } key;
 
 typedef struct
 {
-    int file_touchpad;
-    int file_uinput;
-    int i2c;
-    double max_x;
-    double max_y;
-
-    key **keys;
     unsigned short line;
     unsigned short colonne;
+    key *keys;
+} keymap;
+
+typedef struct
+{
+    int file_touchpad;
+    int file_uinput;
+    int file_i2c;
     unsigned short brightness;
+    point max;
+    point min;
+    keymap mapping;
 } devices_info;
 
 #endif  // DEFINES_H

@@ -35,9 +35,9 @@ void emit(const devices_info *dev_info, unsigned short type, unsigned short code
 void i2c_send(const devices_info *dev_info)
 {
 
-    if (dev_info->i2c == -1) {
+    if (dev_info->file_i2c == -1) {
         return;
-    } // Working without i2c
+    } // Working without file_i2c
 
     buf[11] = bright[dev_info->brightness];
 
@@ -55,5 +55,5 @@ void i2c_send(const devices_info *dev_info)
                     .nmsgs = sizeof(message) / sizeof(message[0]),
             };
 
-    check_ioctl(ioctl(dev_info->i2c, I2C_RDWR, &payload));
+    check_ioctl(ioctl(dev_info->file_i2c, I2C_RDWR, &payload));
 }

@@ -2,7 +2,7 @@
 #define KEY_EVENTS_H
 
 #include "defines.h"
-#include "error.h"
+#include "utils/error.h"
 #include "interface.h"
 
 /**
