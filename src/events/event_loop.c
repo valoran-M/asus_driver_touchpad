@@ -3,9 +3,9 @@
 #include <math.h>
 #include <linux/input.h>
 #include <sys/poll.h>
-#include <stdlib.h>
-#include <linux/uinput.h>
 #include <stdio.h>
+
+#include "utils/keymap.h"
 
 #include "event_loop.h"
 #include "interface.h"
@@ -13,42 +13,24 @@
 
 int running = 1;
 
-void sighandler(int sig)
+void sig_handler()
 {
     running = 0;
-}
-
-void stop(devices_info *dev_info)
-{
-    close(dev_info->file_touchpad);
-    if (dev_info->i2c != -1)
-    {
-        close(dev_info->i2c);
-    }
-
-    ioctl(dev_info->file_uinput, UI_DEV_DESTROY);
-    close(dev_info->file_uinput);
-
-    for (size_t i = 0; i < dev_info->line; i++)
-    {
-        free(dev_info->keys[i]);
-    }
-    free(dev_info->keys);
-
-    exit(EXIT_SUCCESS);
 }
 
 void run(devices_info *dev_info)
 {
     struct input_event event;
-    point position;
-    int numlock = 0, finger = 0;
-    int col = 0, line = 0;
-    key value = (key){-1, -1};
-    position.x = 0;
-    position.y = 0;
+    point position = {0, 0};
+    int numlock = 0;
+    int finger = 0;
 
-    signal(SIGINT, sighandler);
+    unsigned short col;
+    unsigned short line;
+
+    key value = (key){-1, -1};
+
+    signal(SIGINT, &sig_handler);
 
     emit(dev_info, EV_KEY, KEY_NUMLOCK, 0);
 
@@ -64,22 +46,15 @@ void run(devices_info *dev_info)
             continue;
         }
 
-        if (event.type == EV_ABS)
+        if (event.code == ABS_MT_POSITION_X)
         {
-            if (event.code == ABS_MT_POSITION_X)
-            {
-                position.x = event.value / dev_info->max_x;
-            }
-            else if (event.code == ABS_MT_POSITION_Y)
-            {
-                position.y = event.value / dev_info->max_y;
-            }
-            printf("Position : %f, %f\n", position.x, position.y);
-
-            continue;
+            position.x = (event.value - dev_info->min.x) / dev_info->range.x;
         }
-
-        if (event.code == BTN_TOOL_FINGER)
+        else if (event.code == ABS_MT_POSITION_Y)
+        {
+            position.y = (event.value - dev_info->min.y) / dev_info->range.y;
+        }
+        else if (event.code == BTN_TOOL_FINGER)
         {
             if (event.value == 0)
             {
@@ -117,21 +92,16 @@ void run(devices_info *dev_info)
                 }
             }
 
-            if (numlock)
+            if (numlock && finger == 1)
             {
-                if (finger == 1)
-                {
-                    finger = 2;
+                finger = 2;
 
-                    col = (int)floor((double)dev_info->colonne * position.x);
-                    line = (int)floor(((double)dev_info->line * position.y) - 0.3);
+                col = (short)floor(dev_info->mapping.colonne * position.x);
+                line = (short)floor((dev_info->mapping.line * position.y) - 0.3);
+                // Le - 0.3 est-il obligatoirement nécessaire sur ton touchpad ?
+                // Ça fonctionne super bien sur le mien sans
 
-                    if (line >= 0)
-                    {
-                        value = dev_info->keys[line][col];
-                        press_key(dev_info, value);
-                    }
-                }
+                press_key(dev_info, keymap_get(dev_info, line, col));
             }
         }
     }
