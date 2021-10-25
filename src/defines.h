@@ -8,7 +8,7 @@
 #define UINPUT_FILE "/dev/uinput"
 
 #define DEVICE_REGEX "Name=\"(.*touchpad.*)\"\n.*\n.*\n?.*sysfs=(.*)\n.*\n.*\n?.*handlers=.*(event[0-9]*).*"
-#define I2C_REGEX "file_i2c-[0-9]*"
+#define I2C_REGEX "i2c-[0-9]*"
 
 #define DEVICE_MATCH_NUMBER 4
 #define BUFFER_SIZE 10000
