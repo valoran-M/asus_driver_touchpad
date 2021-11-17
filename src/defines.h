@@ -29,6 +29,8 @@ typedef struct
 {
     unsigned short line;
     unsigned short colonne;
+    float offset;
+    
     key *keys;
 } keymap;
 
@@ -45,4 +47,4 @@ typedef struct
     keymap mapping;
 } devices_info;
 
-#endif  // DEFINES_H
+#endif // DEFINES_H

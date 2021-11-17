@@ -2,10 +2,11 @@
 
 #include <stdlib.h>
 
-void keymap_init(devices_info *dev_info, unsigned short line, unsigned short colonne)
+void keymap_init(devices_info *dev_info, unsigned short line, unsigned short colonne, float offset)
 {
     dev_info->mapping.line = line;
     dev_info->mapping.colonne = colonne;
+    dev_info->mapping.offset = offset;
     dev_info->mapping.keys = calloc(line * colonne, sizeof(key));
 
     if (dev_info->mapping.keys == NULL)

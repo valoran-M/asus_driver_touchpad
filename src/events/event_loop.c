@@ -84,7 +84,7 @@ void run(devices_info *dev_info)
                 finger = 2;
 
                 col = (short)floor(dev_info->mapping.colonne * position.x);
-                line = (short)floor((dev_info->mapping.line * position.y) - 0.3);
+                line = (short)floor((dev_info->mapping.line * position.y) - dev_info->mapping.offset);
                 if (line >= 0)
                 {
                     value = keymap_get(dev_info, line, col);

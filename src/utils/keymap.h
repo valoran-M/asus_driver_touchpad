@@ -4,7 +4,7 @@
 #include "defines.h"
 #include "utils/utils.h"
 
-void keymap_init(devices_info *dev_info, unsigned short line, unsigned short colonne);
+void keymap_init(devices_info *dev_info, unsigned short line, unsigned short colonne, float offset);
 
 void keymap_free(devices_info *dev_info);
 
