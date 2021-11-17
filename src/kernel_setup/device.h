@@ -3,6 +3,7 @@
 
 #include <regex.h>
 #include "defines.h"
+#include "utils/utils.h"
 
 /**
  *
@@ -20,7 +21,7 @@ void get_devices(devices_info *dev_info);
  * @return char* allocated buffer of the whole file
  *
  **/
-char *read_device_list();
+char *read_device_list(devices_info *dev_info);
 
 /**
  *
@@ -32,7 +33,7 @@ char *read_device_list();
  * @param char *buffer : buffer to free in case of failure
  *
  **/
-void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer);
+void extract_match(const regmatch_t *matches, size_t i, char **match_buffer, char *buffer, devices_info *dev_info);
 
 /**
  *
@@ -47,11 +48,11 @@ void open_touchpad(devices_info *dev_info, char *buffer, char *match_buffer);
 
 /**
  *
- * Open i2c file and store the new descriptor in dev_info->file_i2c
+ * Open file_i2c file and store the new descriptor in dev_info->file_i2c
  *
  * @param dev_info* dev_info : dev_info struct to store in
  * @param char* buffer : pointer to free if an error occurs
- * @param char* match_buffer : i2c file name
+ * @param char* match_buffer : file_i2c file name
  *
  **/
 void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);
@@ -62,23 +63,5 @@ void open_i2c(devices_info *dev_info, char *buffer, char *match_buffer);
  *
  **/
 void max_min(devices_info *dev_info);
-
-/**
- * 
- * stop get_proc when FAILURE
- * 
- * @param char* output
- * 
- **/
-void stop_get_proc(const char *output);
-
-/**
- *
- * Print warning message
- *
- * @param char* output
- *
- **/
-void warning(const char *output);
 
 #endif // DEVICE_H

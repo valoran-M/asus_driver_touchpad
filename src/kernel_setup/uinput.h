@@ -2,6 +2,8 @@
 #define UINPUT_SETUP_H
 
 #include "defines.h"
+#include "utils/utils.h"
+#include "utils/keymap.h"
 
 /**
  * 

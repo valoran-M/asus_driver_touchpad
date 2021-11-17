@@ -13,32 +13,36 @@
 #define DEVICE_MATCH_NUMBER 4
 #define BUFFER_SIZE 10000
 
-
 typedef struct
 {
     double x;
     double y;
 } point;
 
+typedef struct
+{
+    unsigned char shifted;
+    unsigned short key;
+} key;
 
 typedef struct
 {
-    int shifted;
-    int key;
-} key;
+    unsigned short line;
+    unsigned short colonne;
+    key *keys;
+} keymap;
 
 typedef struct
 {
     int file_touchpad;
     int file_uinput;
-    int i2c;
-    double max_x;
-    double max_y;
-
-    key **keys;
-    unsigned int line;
-    unsigned int colonne;
+    int file_i2c;
     unsigned short brightness;
+
+    point range;
+    point min;
+
+    keymap mapping;
 } devices_info;
 
 #endif  // DEFINES_H
