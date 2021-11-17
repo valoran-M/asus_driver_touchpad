@@ -27,33 +27,31 @@ void emit(devices_info *dev_info, unsigned short type, unsigned short code, int 
 
     size_t to_write = sizeof(ie);
 
-    if (write(dev_info->file_uinput, &ie, to_write) != to_write) {
+    if (write(dev_info->file_uinput, &ie, to_write) != to_write)
         error("Failed to emit key.", dev_info);
-    }
 }
 
 void i2c_send(devices_info *dev_info)
 {
 
-    if (dev_info->file_i2c == -1) {
+    if (dev_info->file_i2c == -1)
         return;
-    } // Working without file_i2c
 
     buf[11] = bright[dev_info->brightness];
 
     struct i2c_msg message[] = {
-            {
-                    .addr = (__u16) 0x15,
-                    .buf = buf,
-                    .len = (__u16) 13,
-            },
+        {
+            .addr = (__u16)0x15,
+            .buf = buf,
+            .len = (__u16)13,
+        },
     };
 
     struct i2c_rdwr_ioctl_data payload =
-            {
-                    .msgs = message,
-                    .nmsgs = sizeof(message) / sizeof(message[0]),
-            };
+        {
+            .msgs = message,
+            .nmsgs = sizeof(message) / sizeof(message[0]),
+        };
 
     check_ioctl(ioctl(dev_info->file_i2c, I2C_RDWR, &payload), dev_info);
 }

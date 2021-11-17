@@ -11,20 +11,18 @@ void setup_uinput(devices_info *dev_info)
 
     dev_info->file_uinput = open(UINPUT_FILE, O_WRONLY | O_NONBLOCK);
 
-    if (dev_info->file_uinput == -1) {
+    if (dev_info->file_uinput == -1)
         error("Failed to open uinput file.", dev_info);
-    }
 
     check_ioctl(ioctl(dev_info->file_uinput, UI_SET_EVBIT, EV_KEY), dev_info);
     check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_NUMLOCK), dev_info);
     check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT, KEY_LEFTSHIFT), dev_info);
 
-    for (unsigned short line = 0; line < dev_info->mapping.line; line++) {
-        for (unsigned short col = 0; col < dev_info->mapping.colonne; col++) {
+    for (unsigned short line = 0; line < dev_info->mapping.line; line++)
+        for (unsigned short col = 0; col < dev_info->mapping.colonne; col++)
             check_ioctl(ioctl(dev_info->file_uinput, UI_SET_KEYBIT,
-                              keymap_get(dev_info, line, col).key), dev_info);
-        }
-    }
+                              keymap_get(dev_info, line, col).key),
+                        dev_info);
 
     memset(&u_setup, 0x00, sizeof(u_setup));
     u_setup.id.bustype = BUS_PCI;

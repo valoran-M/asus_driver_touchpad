@@ -29,9 +29,8 @@ void release_key(devices_info *dev_info, key k)
 
 void press_key(devices_info *dev_info, key k)
 {
-    if (k.shifted) {
+    if (k.shifted)
         emit(dev_info, EV_KEY, KEY_LEFTSHIFT, 1);
-    }
     emit(dev_info, EV_KEY, k.key, 1);
     emit(dev_info, EV_SYN, SYN_REPORT, 0);
 }
