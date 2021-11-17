@@ -7,7 +7,7 @@
 
 typedef enum
 {
-    ux581l,
+    M433IA,
     basic,
 } models;
 
@@ -40,12 +40,12 @@ key **array_init(unsigned short line, unsigned short colonne);
 void models_selections(devices_info *dev_info, models mod);
 
 /**
- * init ux581l model
+ * init M433IA model
  * 
  * @return key**
  * 
  **/
-void ux581l_mode(devices_info *dev_info);
+void M433IA_mode(devices_info *dev_info);
 
 /**
  * init basic model

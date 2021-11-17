@@ -9,10 +9,8 @@ void init_models(devices_info *dev_info, int argc, char const *args[])
         models_selections(dev_info, basic);
     else
     {
-        printf("%s\n", args[1]);
-        printf("%d\n", strcmp("ux581l", args[1]) == 0);
-        if (strcmp("ux581l", args[1]) == 0)
-            models_selections(dev_info, ux581l);
+        if (strcmp("M433IA", args[1]) == 0)
+            models_selections(dev_info, M433IA);
         else
             models_selections(dev_info, basic);
     }
@@ -22,8 +20,8 @@ void models_selections(devices_info *dev_info, models mod)
 {
     switch (mod)
     {
-    case ux581l:
-        ux581l_mode(dev_info);
+    case M433IA:
+        M433IA_mode(dev_info);
         break;
 
     case basic:
@@ -34,7 +32,7 @@ void models_selections(devices_info *dev_info, models mod)
     }
 }
 
-void ux581l_mode(devices_info *dev_info)
+void M433IA_mode(devices_info *dev_info)
 {
     keymap_init(dev_info, 4, 5, 0.3f);
 
