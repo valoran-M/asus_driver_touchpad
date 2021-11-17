@@ -38,22 +38,14 @@ void run(devices_info *dev_info)
     {
 
         if (ready_to_read(dev_info->file_touchpad))
-        {
             read(dev_info->file_touchpad, &event, sizeof(event));
-        }
         else
-        {
             continue;
-        }
 
         if (event.code == ABS_MT_POSITION_X)
-        {
             position.x = (event.value - dev_info->min.x) / dev_info->range.x;
-        }
         else if (event.code == ABS_MT_POSITION_Y)
-        {
             position.y = (event.value - dev_info->min.y) / dev_info->range.y;
-        }
         else if (event.code == BTN_TOOL_FINGER)
         {
             if (event.value == 0)
@@ -66,30 +58,22 @@ void run(devices_info *dev_info)
                 }
             }
             if (event.value == 1 && finger == 0)
-            {
                 finger = 1;
-            }
 
             if (event.value == 1 && position.x > 0.95 && position.y < 0.09)
             {
                 finger = 0;
                 numlock = !numlock;
                 if (numlock)
-                {
                     activate_numpad(dev_info);
-                }
                 else
-                {
                     deactivate_numpad(dev_info);
-                }
             }
             else if (event.value == 1 && position.x < 0.06 && position.y < 0.07)
             {
                 finger = 0;
                 if (numlock)
-                {
                     change_brightness(dev_info);
-                }
             }
 
             if (numlock && finger == 1)
@@ -113,10 +97,8 @@ int ready_to_read(int fd)
     fds.fd = fd;
     fds.events = POLLIN;
 
-    if (poll(&fds, 1, 1000) > 0)
-    { // 1000 ms : timeout
+    if (poll(&fds, 1, 1000) > 0) // 1000 ms : timeout
         return fds.revents & POLLIN;
-    }
 
     return 0;
 }
