@@ -42,10 +42,13 @@ void run(devices_info *dev_info)
         else
             continue;
 
-        if (event.code == ABS_MT_POSITION_X)
-            position.x = (event.value - dev_info->min.x) / dev_info->range.x;
-        else if (event.code == ABS_MT_POSITION_Y)
-            position.y = (event.value - dev_info->min.y) / dev_info->range.y;
+        if (event.type == EV_ABS)
+        {
+            if (event.code == ABS_MT_POSITION_X)
+                position.x = (event.value - dev_info->min.x) / dev_info->range.x;
+            else if (event.code == ABS_MT_POSITION_Y)
+                position.y = (event.value - dev_info->min.y) / dev_info->range.y;
+        }
         else if (event.code == BTN_TOOL_FINGER)
         {
             if (event.value == 0)
@@ -82,10 +85,11 @@ void run(devices_info *dev_info)
 
                 col = (short)floor(dev_info->mapping.colonne * position.x);
                 line = (short)floor((dev_info->mapping.line * position.y) - 0.3);
-                // Le - 0.3 est-il obligatoirement nécessaire sur ton touchpad ?
-                // Ça fonctionne super bien sur le mien sans
-
-                press_key(dev_info, keymap_get(dev_info, line, col));
+                if (line >= 0)
+                {
+                    value = keymap_get(dev_info, line, col);
+                    press_key(dev_info, value);
+                }
             }
         }
     }
