@@ -57,24 +57,16 @@ void run(devices_info *dev_info)
     {
 
         if (ready_to_read(dev_info->file_touchpad))
-        {
             read(dev_info->file_touchpad, &event, sizeof(event));
-        }
         else
-        {
             continue;
-        }
 
         if (event.type == EV_ABS)
         {
             if (event.code == ABS_MT_POSITION_X)
-            {
                 position.x = event.value / dev_info->max_x;
-            }
             else if (event.code == ABS_MT_POSITION_Y)
-            {
                 position.y = event.value / dev_info->max_y;
-            }
             continue;
         }
 
@@ -90,30 +82,22 @@ void run(devices_info *dev_info)
                 }
             }
             if (event.value == 1 && finger == 0)
-            {
                 finger = 1;
-            }
 
             if (event.value == 1 && position.x > 0.95 && position.y < 0.09)
             {
                 finger = 0;
                 numlock = !numlock;
                 if (numlock)
-                {
                     activate_numpad(dev_info);
-                }
                 else
-                {
                     deactivate_numpad(dev_info);
-                }
             }
             else if (event.value == 1 && position.x < 0.06 && position.y < 0.07)
             {
                 finger = 0;
                 if (numlock)
-                {
                     change_brightness(dev_info);
-                }
             }
 
             if (numlock)
