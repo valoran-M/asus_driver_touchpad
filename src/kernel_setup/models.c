@@ -9,8 +9,14 @@ void init_models(devices_info *dev_info, int argc, char const *args[])
         models_selections(dev_info, basic);
     else
     {
+        printf("%d\n", strcmp("UX433FA", args[1]));
         if (strcmp("M433IA", args[1]) == 0)
             models_selections(dev_info, M433IA);
+        else if (strcmp("UX433FA", args[1]) == 0)
+        {
+            printf("OK\n");
+            models_selections(dev_info, UX433FA);
+        }
         else
             models_selections(dev_info, basic);
     }
@@ -22,6 +28,10 @@ void models_selections(devices_info *dev_info, models mod)
     {
     case M433IA:
         M433IA_mode(dev_info);
+        break;
+
+    case UX433FA:
+        UX433FA_mode(dev_info);
         break;
 
     case basic:
@@ -55,6 +65,30 @@ void M433IA_mode(devices_info *dev_info)
     keymap_set(dev_info, 3, 2, (key){0, KEY_ENTER});
     keymap_set(dev_info, 3, 3, (key){1, KEY_EQUAL});
     keymap_set(dev_info, 3, 4, (key){0, KEY_EQUAL});
+}
+
+void UX433FA_mode(devices_info *dev_info)
+{
+    keymap_init(dev_info, 4, 5, 0.3f);
+
+    unsigned short code = KEY_9;
+    for (short line = 0; line <= 2; line++)
+        for (short col = 2; col >= 0; col--)
+        {
+            keymap_set(dev_info, line, col, (key){1, code});
+            code--;
+        }
+    keymap_set(dev_info, 0, 3, (key){1, KEY_DOT});
+    keymap_set(dev_info, 0, 4, (key){0, KEY_BACKSPACE});
+    keymap_set(dev_info, 1, 3, (key){0, KEY_BACKSLASH});
+    keymap_set(dev_info, 1, 4, (key){0, KEY_BACKSPACE});
+    keymap_set(dev_info, 2, 3, (key){0, KEY_6});
+    keymap_set(dev_info, 2, 4, (key){0, KEY_ENTER});
+    keymap_set(dev_info, 3, 0, (key){1, KEY_0});
+    keymap_set(dev_info, 3, 1, (key){1, KEY_0});
+    keymap_set(dev_info, 3, 2, (key){1, KEY_COMMA});
+    keymap_set(dev_info, 3, 3, (key){1, KEY_EQUAL});
+    keymap_set(dev_info, 3, 4, (key){0, KEY_ENTER});
 }
 
 void basic_mode(devices_info *dev_info)

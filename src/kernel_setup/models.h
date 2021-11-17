@@ -8,6 +8,7 @@
 typedef enum
 {
     M433IA,
+    UX433FA,
     basic,
 } models;
 
@@ -46,6 +47,14 @@ void models_selections(devices_info *dev_info, models mod);
  * 
  **/
 void M433IA_mode(devices_info *dev_info);
+
+/**
+ * init UX433FA model
+ * 
+ * @return key**
+ * 
+ **/
+void UX433FA_mode(devices_info *dev_info);
 
 /**
  * init basic model
