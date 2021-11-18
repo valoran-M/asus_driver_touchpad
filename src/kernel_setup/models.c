@@ -12,10 +12,7 @@ void init_models(devices_info *dev_info, int argc, char const *args[])
         if (strcmp("M433IA", args[1]) == 0)
             models_selections(dev_info, M433IA);
         else if (strcmp("UX433FA", args[1]) == 0)
-        {
-            printf("OK\n");
             models_selections(dev_info, UX433FA);
-        }
         else
             models_selections(dev_info, basic);
     }
