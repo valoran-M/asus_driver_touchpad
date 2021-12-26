@@ -85,11 +85,9 @@ void run(devices_info *dev_info)
 
                 col = (short)floor(dev_info->mapping.colonne * position.x);
                 line = (short)floor((dev_info->mapping.line * position.y) - dev_info->mapping.offset);
-                if (line >= 0)
-                {
-                    value = keymap_get(dev_info, line, col);
-                    press_key(dev_info, value);
-                }
+                
+                value = keymap_get(dev_info, line, col);
+                press_key(dev_info, value);
             }
         }
     }

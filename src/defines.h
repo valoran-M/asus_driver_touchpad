@@ -21,8 +21,8 @@ typedef struct
 
 typedef struct
 {
-    unsigned char shifted;
-    unsigned short key;
+    char shifted;
+    short key;
 } key;
 
 typedef struct
